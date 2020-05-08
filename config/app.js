@@ -231,7 +231,7 @@ module.exports = {
     |
     | The following cookie options are generic settings used by AdonisJs to create
     | cookies. However, some parts of the application like `sessions` can have
-    | seperate settings for cookies inside `config/session.js`.
+    | seperate settings for cookies inside `config/session.scripts`.
     |
     */
     cookie: {

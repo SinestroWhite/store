@@ -1,0 +1,20 @@
+/*
+* Default styles
+*/
+
+@import "fonts";
+
+.content {
+    z-index: 19;
+    position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-title;
+    font-weight: 700;
+}
+
+.logo {
+    margin-left: 10px;
+    font-weight: 700 !important;
+}

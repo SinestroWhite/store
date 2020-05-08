@@ -2,6 +2,10 @@
 
 class UserController {
 
+    index({ view }) {
+        view.render('login');
+    }
+
     async login ({ request, auth }) {
         const { email, password } = request.all()
         await auth.attempt(email, password)

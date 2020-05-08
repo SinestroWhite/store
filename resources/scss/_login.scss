@@ -1,0 +1,54 @@
+
+.wave{
+	position: fixed;
+	height: calc(100% - 100px);
+	z-index: -1;
+    animation: animateWave 1000ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.login-content{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	text-align: center;
+}
+
+.img img{
+	width: 500px;
+}
+
+form{
+	width: 360px;
+}
+
+.login-content img{
+    height: 100px;
+}
+
+.login-content h2{
+	margin: 15px 0;
+	color: #333;
+	text-transform: uppercase;
+	font-size: 2.9rem;
+}
+
+@keyframes animateWave {
+    0% {
+        //transform: scale(0.75);
+        left: -50px;
+        bottom: -50px;
+    }
+    100% {
+        //transform: scale(1);
+        left: 0;
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width: 900px){
+
+	.wave{
+		display: none;
+	}
+
+}

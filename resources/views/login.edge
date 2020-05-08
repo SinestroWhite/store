@@ -1,0 +1,48 @@
+@layout('/layouts/default')
+
+@section('content')
+    <div>
+        <img class="wave" src="img/wave.svg" />
+        <div class="container">
+            <div class="columns" style="margin-top: 100px;">
+                <div class="column">
+                    <img src="img/gone_shopping.svg" style="width: 100px;"/>
+                </div>
+                <div class="column is-offset-8">
+                    <div class="login-content">
+                        <form>
+                            <img src="img/logo.png" />
+                            <h2 class="title">Welcome Back</h2>
+                            <button class="button is-primary is-fullwidth">Log in</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        const inputs = document.querySelectorAll(".input");
+
+
+        function addcl() {
+        let parent = this.parentNode.parentNode;
+        parent.classList.add("focus");
+        }
+
+        function remcl() {
+        let parent = this.parentNode.parentNode;
+        if(this.value == ""){
+        parent.classList.remove("focus");
+        }
+        }
+
+
+        inputs.forEach(input => {
+        input.addEventListener("focus", addcl);
+        input.addEventListener("blur", remcl);
+        });
+    </script>
+@endsection

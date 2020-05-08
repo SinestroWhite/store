@@ -17,8 +17,9 @@
 const Route = use('Route');
 
 Route.on('/').render('welcome');
+Route.on('/login').render('login');
 
-Route.get('/login', 'UserController.index');
+// Route.get('/login', 'UserController.index');
 
 Route.get('users/:id', 'UserController.show').middleware('auth');
 
