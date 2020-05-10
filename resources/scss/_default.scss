@@ -4,6 +4,15 @@
 
 @import "fonts";
 
+html {
+    min-width: fit-content;
+    overflow: auto !important;
+}
+
+body {
+    min-width: fit-content;
+}
+
 .content {
     z-index: 19;
     position: relative;
@@ -17,4 +26,8 @@ h1, h2, h3, h4, h5, h6 {
 .logo {
     margin-left: 10px;
     font-weight: 700 !important;
+}
+
+.form-error {
+    color: red;
 }

@@ -1,8 +1,9 @@
 @layout('/layouts/default')
 
 @section('title')
-    WebStore | Login
+    WebStore | Register
 @endsection
+
 
 @section('content')
     <div>
@@ -11,17 +12,20 @@
             <div class="columns is-vcentered" style="display: flex; height: calc(100vh - 70px);">
                 <div class="image-column column is-4 is-offset-1">
                     <div class="img">
-                        <img src="img/gone_shopping.svg"/>
+                        <img src="img/browse_shopping_list.svg"/>
                     </div>
                 </div>
                 <div class="column is-4 is-offset-2 is-offset-4-tablet">
                     <div class="login-content">
-                        <form action="{{ route('UserController.login') }}" method="POST">
+                        <form action="{{ route('UserController.register') }}" method="POST">
                             {{ csrfField() }}
                             <img src="img/logo.png" />
-                            <h2 class="title">Welcome Back</h2>
-                            @if(flashMessage('loginError'))
-                                <span class="form-error">{{ flashMessage('loginError') }}</span>
+                            <h2 class="title">Hey there</h2>
+                            <input class="input" type="text" placeholder="Username" name="username" value="{{ old('username', '') }}"/>
+                            @if(hasErrorFor('username'))
+                                <span class="form-error">
+                                    {{ getErrorFor('username') }}
+                                </span>
                             @endif
                             <input class="input" type="email" name="email" placeholder="Email" value="{{ old('email', '') }}"/>
                             @if(hasErrorFor('email'))
@@ -29,13 +33,13 @@
                                     {{ getErrorFor('email') }}
                                 </span>
                             @endif
-                            <input class="input" type="password" name="password" placeholder="Password"/>
+                            <input class="input" type="password" placeholder="Password" name="password"/>
                             @if(hasErrorFor('password'))
-                                <span>
+                                <span class="form-error">
                                     {{ getErrorFor('password') }}
                                 </span>
                             @endif
-                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Log in</button>
+                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;" type="submit">Sign up</button>
                         </form>
                     </div>
                 </div>

@@ -17,12 +17,15 @@
 const Route = use('Route');
 
 Route.on('/').render('welcome');
+Route.on('/register').render('register');
 Route.on('/login').render('login');
 
-// Route.get('/login', 'UserController.index');
+Route.post('/register', 'UserController.register').validator('CreateUser');
+Route.post('/login', 'UserController.login').validator('LoginUser');
+Route.get('/logout', 'UserController.logout');
 
-Route.get('users/:id', 'UserController.show').middleware('auth');
+Route.get('dashboard', 'DashboardController.index').middleware(['auth:jwt']);
 
-
+// Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');
 // Route.post('login', 'UserController.login');

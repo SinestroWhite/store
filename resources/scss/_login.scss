@@ -13,16 +13,17 @@
 	text-align: center;
 }
 
-.img img{
-	width: 500px;
-}
-
-form{
-	width: 360px;
-}
-
-.login-content img{
-    height: 100px;
+.login-content {
+    form{
+        width: 100%;
+        margin-bottom: 50px;
+    }
+    img {
+        height: 100px;
+    }
+    input {
+        margin: 5px 0;
+    }
 }
 
 .login-content h2{
@@ -35,8 +36,8 @@ form{
 @keyframes animateWave {
     0% {
         //transform: scale(0.75);
-        left: -50px;
-        bottom: -50px;
+        left: -70px;
+        bottom: -70px;
     }
     100% {
         //transform: scale(1);
@@ -45,10 +46,29 @@ form{
     }
 }
 
-@media screen and (max-width: 900px){
 
+@media screen and (max-width: 1120px){
+    .image-column {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 1121px){
+    .login-container {
+        .is-offset-4-tablet {
+            margin-left: 16.66667% !important;
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .login-content{
+        margin: 0 10%;
+    }
+}
+
+@media screen and (max-width: 900px){
 	.wave{
 		display: none;
 	}
-
 }

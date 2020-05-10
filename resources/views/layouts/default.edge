@@ -7,8 +7,11 @@
         <link rel="icon" type="image/png" sizes="32x32" href="img/favicons/favicon-32x32.png"/>
         <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/favicon-16x16.png"/>
         <link rel="manifest" href="site.webmanifest"/>
-        <title>WebStore</title>
+        <title>
+            @!section('title')
+        </title>
         {{ style('app') }}
+        @!section('css')
     </head>
     <body>
         @section('navbar')
@@ -62,12 +65,29 @@
                     <div class="navbar-end">
                         <div class="navbar-item">
                             <div class="buttons">
-                                <a class="button is-primary" href="/register">
-                                    <strong>Sign up</strong>
-                                </a>
-                                <a class="button is-light" href="/login">
-                                    Log in
-                                </a>
+                                @loggedIn
+                                    <div class="navbar-item has-dropdown is-hoverable">
+                                        <a class="navbar-link">
+                                            {{ auth.user.username }}
+                                        </a>
+
+                                        <div class="navbar-dropdown">
+                                            <a class="navbar-item">
+                                                Profile
+                                            </a>
+                                            <a href="/logout" class="navbar-item">
+                                                Logout
+                                            </a>
+                                        </div>
+                                    </div>
+                                @else
+                                    <a class="button is-primary" href="/register">
+                                        <strong>Sign up</strong>
+                                    </a>
+                                    <a class="button is-light" href="/login">
+                                        Log in
+                                    </a>
+                                @endloggedIn
                             </div>
                         </div>
                     </div>

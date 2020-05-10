@@ -16,7 +16,7 @@ module.exports = {
     | Available Serializers - lucid, database
     |
     */
-    authenticator: 'jwt',
+    authenticator: 'session',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ module.exports = {
     session: {
         serializer: 'lucid',
         model: 'App/Models/User',
-        scheme: 'jwt',
+        scheme: 'session',
         uid: 'email',
         password: 'password'
     },
