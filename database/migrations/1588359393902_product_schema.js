@@ -16,6 +16,7 @@ class ProductSchema extends Schema {
             table.float('price');
             table.boolean('is_active').notNullable().defaultTo(true);
             table.integer('category_id').unsigned().references('id').inTable('categories');
+            table.integer('currency_id').unsigned().references('id').inTable('currencies');
             table.timestamps();
         })
     }
