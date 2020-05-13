@@ -42,6 +42,12 @@
                                     {{ getErrorFor('password') }}
                                 </span>
                             @endif
+                            <input class="input" type="password" placeholder="Password Confirmation" name="password_confirmation"/>
+                            @if(hasErrorFor('password'))
+                                <span class="form-error">
+                                    {{ getErrorFor('password') }}
+                                </span>
+                            @endif
                             <button class="button is-primary is-fullwidth" style="margin-top: 24px;" type="submit">Sign up</button>
                         </form>
                     </div>

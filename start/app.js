@@ -21,6 +21,7 @@ const providers = [
     '@adonisjs/auth/providers/AuthProvider',
     '@adonisjs/validator/providers/ValidatorProvider',
     '@adonisjs/persona/providers/PersonaProvider',
+    '@adonisjs/mail/providers/MailProvider',
     'adonis-throttle/providers/ThrottleProvider',
 ]
 
