@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div>
+    <div class="content">
         <img class="wave" src="img/wave.svg" />
         <div class="container login-container">
             <div class="columns is-vcentered" style="display: flex; height: calc(100vh - 70px);">
@@ -22,6 +22,9 @@
                             <h2 class="title">Welcome Back</h2>
                             @if(flashMessage('loginError'))
                                 <span class="form-error">{{ flashMessage('loginError') }}</span>
+                            @endif
+                            @if(flashMessage('tooManyAttempts'))
+                                <span class="form-error">{{ flashMessage('tooManyAttempts') }}</span>
                             @endif
                             <input class="input" type="email" name="email" placeholder="Email" value="{{ old('email', '') }}"/>
                             @if(hasErrorFor('email'))
@@ -42,29 +45,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        const inputs = document.querySelectorAll(".input");
-
-
-        function addcl() {
-        let parent = this.parentNode.parentNode;
-        parent.classList.add("focus");
-        }
-
-        function remcl() {
-        let parent = this.parentNode.parentNode;
-        if(this.value == ""){
-        parent.classList.remove("focus");
-        }
-        }
-
-
-        inputs.forEach(input => {
-        input.addEventListener("focus", addcl);
-        input.addEventListener("blur", remcl);
-        });
-    </script>
 @endsection

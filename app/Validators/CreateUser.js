@@ -1,11 +1,18 @@
 'use strict'
 
+const { rule } = use("Validator");
+
 class CreateUser {
     get rules () {
         return {
             'username': 'required|max:255',
-            'email': 'required|unique:users|max:256',
-            'password': 'required|min:6'
+            'email': 'required|email|unique:users|max:256',
+            'password': [
+                rule('required'),
+                rule('max', '255'),
+                rule('min', '8'),
+                rule('regex', new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')),
+            ]
         }
     }
 
@@ -14,7 +21,8 @@ class CreateUser {
             'required': 'The {{ field }} is required.',
             'unique': 'The {{ field }} already exists.',
             'max': 'The {{ field }} is too long.',
-            'min': 'The {{ field }} must be at least 6 characters long.'
+            'min': 'The {{ field }} must be at least 8 characters long.',
+            'regex': 'The password must contain at lest one letter and one number.'
         }
     }
 

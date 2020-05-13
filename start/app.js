@@ -19,7 +19,9 @@ const providers = [
     '@adonisjs/shield/providers/ShieldProvider',
     '@adonisjs/session/providers/SessionProvider',
     '@adonisjs/auth/providers/AuthProvider',
-    '@adonisjs/validator/providers/ValidatorProvider'
+    '@adonisjs/validator/providers/ValidatorProvider',
+    '@adonisjs/persona/providers/PersonaProvider',
+    'adonis-throttle/providers/ThrottleProvider',
 ]
 
 /*
@@ -47,7 +49,9 @@ const aceProviders = [
 |   { Route: 'Adonis/Src/Route' }
 |
 */
-const aliases = {}
+const aliases = {
+    Throttle: 'Adonis/Addons/Throttle'
+}
 
 /*
 |--------------------------------------------------------------------------

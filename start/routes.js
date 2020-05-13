@@ -17,11 +17,15 @@
 const Route = use('Route');
 
 Route.on('/').render('welcome');
-Route.on('/register').render('register');
-Route.on('/login').render('login');
 
-Route.post('/register', 'UserController.register').validator('CreateUser');
-Route.post('/login', 'UserController.login').validator('LoginUser');
+Route.get('/register', 'UserController.displayRegister');
+Route.post('/register', 'UserController.register').middleware('throttle:5').validator('CreateUser');
+
+Route.post('/login', 'UserController.login').middleware('throttle:5').validator('LoginUser');
+Route.get('/login', 'UserController.displayLogin');
+
+Route.get('/profile', 'UserController.profile');
+
 Route.get('/logout', 'UserController.logout');
 
 Route.get('dashboard', 'DashboardController.index').middleware(['auth:jwt']);

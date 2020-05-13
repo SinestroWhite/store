@@ -1,0 +1,23 @@
+@layout('/layouts/default')
+
+@section('title')
+    Profile
+@endsection
+
+@section('content')
+    <div class="columns is-centered">
+        <div class="column is-three-fifths-desktop">
+            <h1 class="page-title">Profile</h1>
+            <button class="button is-warning is-pulled-right modal-button" data-target="save">Test</button>
+            <div class="modal" id="save">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                    <p class="image is-4by3">
+                        <img src="https://bulma.io/images/placeholders/1280x960.png" alt=""/>
+                    </p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+        </div>
+    </div>
+@endsection

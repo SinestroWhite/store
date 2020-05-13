@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div>
+    <div class="content">
         <img class="wave" src="img/wave.svg" />
         <div class="container login-container">
             <div class="columns is-vcentered" style="display: flex; height: calc(100vh - 70px);">
@@ -21,6 +21,9 @@
                             {{ csrfField() }}
                             <img src="img/logo.png" />
                             <h2 class="title">Hey there</h2>
+                            @if(flashMessage('tooManyAttempts'))
+                                <span class="form-error">{{ flashMessage('tooManyAttempts') }}</span>
+                            @endif
                             <input class="input" type="text" placeholder="Username" name="username" value="{{ old('username', '') }}"/>
                             @if(hasErrorFor('username'))
                                 <span class="form-error">

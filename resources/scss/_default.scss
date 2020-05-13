@@ -3,6 +3,7 @@
 */
 
 @import "fonts";
+@import "colors";
 
 html {
     min-width: fit-content;
@@ -24,10 +25,94 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo {
+    font-family: $font-title;
     margin-left: 10px;
+    margin-top: -3px;
     font-weight: 700 !important;
 }
 
 .form-error {
     color: red;
 }
+
+.primary {
+    background: $primary;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, $primary, $twitter);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, $primary, $twitter); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: white;
+}
+
+.page-title {
+    font-family: $font-title;
+    font-weight: 700;
+    margin-top: 10px;
+    font-size: 27px;
+    text-align: center;
+}
+
+.columns {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+//@media screen and (max-width: 1023px) {
+//    .navbar-menu {
+//        margin-top: -500px;
+//        position: relative;
+//        transition: all 1.7s ease;
+//    }
+//    .navbar-menu .is-active {
+//        margin-top: 0 !important;
+//        transition: all 1.7s ease;
+//    }
+//}
+
+// Setting the main font
+//p, span, tr, th, div, a, label, button, input, select, textarea {
+//    font-family: $font-main;
+//}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    font-weight: 600;
+}
+h2 {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+h3 {
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+}
+h4 {
+    display: block;
+    font-weight: bold;
+}
+h5 {
+    display: block;
+    font-size: .83em;
+    font-weight: bold;
+}
+h6 {
+    display: block;
+    font-size: .67em;
+    font-weight: bold;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #989191;
+}
+
