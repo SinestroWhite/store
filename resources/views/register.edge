@@ -1,7 +1,7 @@
 @layout('/layouts/default')
 
 @section('title')
-    WebStore | Register
+    Sign up
 @endsection
 
 
@@ -37,12 +37,6 @@
                                 </span>
                             @endif
                             <input class="input" type="password" placeholder="Password" name="password"/>
-                            @if(hasErrorFor('password'))
-                                <span class="form-error">
-                                    {{ getErrorFor('password') }}
-                                </span>
-                            @endif
-                            <input class="input" type="password" placeholder="Password Confirmation" name="password_confirmation"/>
                             @if(hasErrorFor('password'))
                                 <span class="form-error">
                                     {{ getErrorFor('password') }}

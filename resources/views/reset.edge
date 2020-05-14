@@ -1,0 +1,41 @@
+@layout('/layouts/default')
+
+@section('title')
+    Reset Password
+@endsection
+
+@section('content')
+    <div class="content">
+        <img class="wave" src="/img/wave.svg" />
+        <div class="container login-container">
+            <div class="columns is-vcentered" style="display: flex; height: calc(100vh - 70px);">
+                <div class="image-column column is-4 is-offset-1">
+                    <div class="img">
+                        <img src="/img/browse_shopping_list.svg"/>
+                    </div>
+                </div>
+                <div class="column is-4 is-offset-2 is-offset-4-tablet">
+                    <div class="login-content">
+                        <form action="{{ route('UserController.resetPassword') }}" method="POST">
+                            {{ csrfField() }}
+                            <img src="/img/logo.png" />
+                            <h2 class="title">Password Recovery</h2>
+                            @if(flashMessage('message'))
+                                <span class="form-error">{{ flashMessage('message') }}</span>
+                            @endif
+                            <input type="hidden" value="{{ token }}" name="token"/>
+                            <input class="input" type="password" placeholder="Password" name="password"/>
+                            @if(hasErrorFor('password'))
+                                <span class="form-error">
+                                    {{ getErrorFor('password') }}
+                                </span>
+                            @endif
+                            <input class="input" type="password" placeholder="Confirm Password" name="password_confirmation"/>
+                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Reset Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

@@ -8,16 +8,73 @@
     <div class="columns is-centered">
         <div class="column is-three-fifths-desktop">
             <h1 class="page-title">Profile</h1>
-            <button class="button is-warning is-pulled-right modal-button" data-target="save">Test</button>
-            <div class="modal" id="save">
-                <div class="modal-background"></div>
-                <div class="modal-content">
-                    <p class="image is-4by3">
-                        <img src="https://bulma.io/images/placeholders/1280x960.png" alt=""/>
-                    </p>
+            @if(hasErrorFor('email'))
+                <p class="form-error">
+                    {{ getErrorFor('email') }}
+                </p>
+            @endif
+            @if(hasErrorFor('username'))
+                <p class="form-error">
+                    {{ getErrorFor('username') }}
+                </p>
+            @endif
+            <form id="form" action="none" method="POST">
+                <div class="profile-form">
+                    {{ csrfField() }}
+                    <input class="input" type="text" placeholder="Username" name="username" value="{{ auth.user.username }}"/>
+                    <input class="input" type="email" placeholder="Email" name="email" value="{{ auth.user.email }}"/>
                 </div>
-                <button class="modal-close is-large" aria-label="close"></button>
-            </div>
+
+                <button class="button is-primary is-pulled-right modal-button profile-save" type="button" data-target="save">Save</button>
+                <button class="button is-primary is-pulled-right modal-button profile-save" type="button" data-target="change">Change Password</button>
+                <div class="modal" id="save">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Save</p>
+                            <button class="delete" aria-label="close" type="button"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="profile-password-margin">
+                                <input class="input" type="password" placeholder="Password" name="password"/>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-primary" type="button" onclick="event.preventDefault(); submit('/profile-save'); return;">Save changes</button>
+                            <button class="button" type="button">Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+                <div class="modal" id="change">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Change Password</p>
+                            <button class="delete" aria-label="close" type="button"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="profile-password-margin">
+                                <input class="input" type="password" placeholder="Password" name="password" style="margin-bottom: 10px;"/>
+                                <input class="input" type="password" placeholder="Password Confirm" name="password_confirmation"/>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-primary" type="button" onclick="event.preventDefault(); submit('/profile-change'); return;">Save changes</button>
+                            <button class="button" type="button">Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function submit(route) {
+        console.log('yes');
+            document.getElementById("form").action = route;
+<!--            document.getElementById("form").submit();-->
+        }
+    </script>
 @endsection

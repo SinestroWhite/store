@@ -17,6 +17,7 @@
 const Route = use('Route');
 
 Route.on('/').render('welcome');
+const User = use('App/Models/User')
 
 Route.get('/register', 'UserController.displayRegister');
 Route.post('/register', 'UserController.register').middleware('throttle:5').validator('CreateUser');
@@ -24,11 +25,22 @@ Route.post('/register', 'UserController.register').middleware('throttle:5').vali
 Route.post('/login', 'UserController.login').middleware('throttle:5').validator('LoginUser');
 Route.get('/login', 'UserController.displayLogin');
 
-Route.get('/profile', 'UserController.profile');
+Route.get('/verify/:token', 'UserController.verifyEmail').middleware('throttle:5');
+Route.get('/email-resend', 'UserController.resendEmail').middleware('throttle:1');
 
-Route.get('/logout', 'UserController.logout');
+Route.get('/password-reset', 'UserController.displayForgotPassword');
+Route.post('/password-reset', 'UserController.forgotPassword').middleware('throttle:1,600').validator('RequestPasswordReset');
 
-Route.get('dashboard', 'DashboardController.index').middleware(['auth:jwt']);
+Route.get('/reset/:token', 'UserController.displayResetPassword');
+Route.post('/reset', 'UserController.resetPassword').middleware('throttle:3').validator('ResetPassword');
+
+Route.get('/profile', 'UserController.profile').middleware(['auth:session']);
+Route.post('/profile-save', 'UserController.update').middleware(['auth:session']).validator('updateProfile');
+Route.post('/profile-change', 'UserController.updatePassword').middleware(['auth:session']).validator('updatePassword');
+
+Route.get('/logout', 'UserController.logout').middleware(['auth:session']);
+
+Route.get('dashboard', 'DashboardController.index').middleware(['auth:session']);
 
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');

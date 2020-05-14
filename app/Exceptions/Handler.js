@@ -22,10 +22,16 @@ class ExceptionHandler extends BaseExceptionHandler {
    */
   async handle(error, { response, session }) {
       if (error.name === 'TooManyRequests') { // Too Many Attempts
-          session.flash({tooManyAttempts: 'Too Many Attempts. Please, slow down!'})
-          await session.commit()
-          response.redirect('back')
-          return
+          session.flash({message: 'Too Many Requests. Please, slow down!', type: 'danger'});
+          await session.commit();
+          response.redirect('back');
+          return;
+      }
+      if (error.name === 'InvalidTokenException') {
+          session.flash({ message: 'A problem occurred! May be your token is invalid or expired!', type:'danger' });
+          await session.commit();
+          response.redirect('/');
+          return;
       }
 
       return super.handle(...arguments)

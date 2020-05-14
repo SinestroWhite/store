@@ -1,4 +1,6 @@
-<h2> Hello {{ username }} </h2>
-<p>
-    Welcome to the yardstick club, here's your getting started guide
-</p>
+<div>
+    <h2> Hello, {{ payload.user.username }}! </h2>
+    <p>
+        Welcome to WebStore, click <a href="{{ payload.url }}/verify/{{ payload.token }}">here</a> to activate your account.
+    </p>
+</div>

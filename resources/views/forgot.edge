@@ -1,7 +1,7 @@
 @layout('/layouts/default')
 
 @section('title')
-    Log In
+    Forgotten Password
 @endsection
 
 @section('content')
@@ -16,13 +16,10 @@
                 </div>
                 <div class="column is-4 is-offset-2 is-offset-4-tablet">
                     <div class="login-content">
-                        <form action="{{ route('UserController.login') }}" method="POST">
+                        <form action="{{ route('UserController.forgotPassword') }}" method="POST">
                             {{ csrfField() }}
                             <img src="img/logo.png" />
-                            <h2 class="title">Welcome Back</h2>
-                            @if(flashMessage('loginError'))
-                                <span class="form-error">{{ flashMessage('loginError') }}</span>
-                            @endif
+                            <h2 class="title">Password Recovery</h2>
                             @if(flashMessage('message'))
                                 <span class="form-error">{{ flashMessage('message') }}</span>
                             @endif
@@ -32,14 +29,7 @@
                                     {{ getErrorFor('email') }}
                                 </span>
                             @endif
-                            <input class="input" type="password" name="password" placeholder="Password"/>
-                            @if(hasErrorFor('password'))
-                                <span>
-                                    {{ getErrorFor('password') }}
-                                </span>
-                            @endif
-                            <a href="/password-reset">Forgotten Password</a>
-                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Log in</button>
+                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Send Recovery Email</button>
                         </form>
                     </div>
                 </div>
