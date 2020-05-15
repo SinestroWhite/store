@@ -1,17 +1,18 @@
 'use strict'
 
+const { rule } = use("Validator");
+
 class UpdatePassword {
     get rules () {
         return {
-            'username': 'required|max:255',
-            'email': 'required|email|max:256',
             'password': [
                 rule('required'),
                 rule('confirmed'),
                 rule('max', '255'),
                 rule('min', '8'),
                 rule('regex', new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')),
-            ]
+            ],
+            'old_password': 'required'
         }
     }
 

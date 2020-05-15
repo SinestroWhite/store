@@ -1,8 +1,8 @@
 'use strict'
-const Persona = use('Persona')
-// add to the top of the file
-const User = use('App/Models/User')
+const Persona = use('Persona');
+const Env = use('Env');
 const Event = use('Event');
+const Hash = use('Hash');
 
 Persona.registerationRules = function () {
     return {
@@ -92,19 +92,34 @@ class UserController {
     }
 
     profile ({ view }) {
-        return view.render('profile');
+        return view.render('profile', {url: Env.get('APP_URL')});
     }
 
-    async update({ request, auth }) {
-        const payload = request.only(['username', 'email'])
-        const user = auth.user
-        await Persona.updateProfile(user, payload)
+    async update({ request, auth, session, response }) {
+        const isSame = await Hash.verify(request.input('password'), auth.user.password)
+        if (isSame) {
+            const payload = request.only(['username', 'email'])
+            const user = auth.user
+            await Persona.updateProfile(user, payload).then(() => {
+                session.flash({ message: 'Your profile has been updated! If you have changed your email, you will need to confirm it.', type:'success' });
+                return response.redirect('back');
+            }).catch((error) => {
+                session.flash({ message: 'There is already a user with that email.', type:'danger' });
+                return response.redirect('back');
+            })
+        } else {
+            session.flash({ message: 'Your password didn\'t match!', type:'danger' });
+            return response.redirect('back');
+        }
     }
 
-    async updatePassword({ request, auth }) {
+    async updatePassword({ request, auth, session, response }) {
         const payload = request.only(['old_password', 'password', 'password_confirmation'])
         const user = auth.user
         await Persona.updatePassword(user, payload)
+
+        session.flash({ message: 'Your password has been changed!', type:'success' });
+        return response.redirect('back');
     }
 
     async logout({ auth, response })  {

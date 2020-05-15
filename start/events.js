@@ -30,3 +30,40 @@ Event.on('forgot::password', async (payload) => {
     })
 })
 
+Event.on('password::changed', async (payload) => {
+    await Mail.send('emails.password', {payload}, (message) => {
+        message.to(payload.user.email)
+        message.from(Env.get('EMAIL_FOR_SENDING_MESSAGES'))
+        message.subject('WebStore Security')
+    }).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.error(error);
+    })
+})
+
+Event.on('email::changed', async (payload) => {
+    payload.token = encodeURIComponent(payload.token);
+    payload.url = Env.get('APP_URL');
+    await Mail.send('emails.change', { payload }, (message) => {
+        message.to(payload.user.email)
+        message.from(Env.get('EMAIL_FOR_SENDING_MESSAGES'))
+        message.subject('WebStore Security')
+    }).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.error(error);
+    })
+
+    payload.token = encodeURIComponent(payload.token);
+    payload.url = Env.get('APP_URL');
+    await Mail.send('emails.previous', {payload}, (message) => {
+        message.to(payload.oldEmail)
+        message.from(Env.get('EMAIL_FOR_SENDING_MESSAGES'))
+        message.subject('WebStore Security')
+    }).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.error(error);
+    })
+})

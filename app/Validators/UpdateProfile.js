@@ -1,6 +1,6 @@
 'use strict'
 
-class UpdateProfile{
+class UpdateProfile {
     get rules () {
         return {
             'username': 'required|max:255',
@@ -12,6 +12,7 @@ class UpdateProfile{
     get messages() {
         return {
             'required': 'The {{ field }} is required.',
+            'max': 'The {{ field }} is too long.',
         }
     }
 

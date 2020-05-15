@@ -35,8 +35,8 @@ Route.get('/reset/:token', 'UserController.displayResetPassword');
 Route.post('/reset', 'UserController.resetPassword').middleware('throttle:3').validator('ResetPassword');
 
 Route.get('/profile', 'UserController.profile').middleware(['auth:session']);
-Route.post('/profile-save', 'UserController.update').middleware(['auth:session']).validator('updateProfile');
-Route.post('/profile-change', 'UserController.updatePassword').middleware(['auth:session']).validator('updatePassword');
+Route.post('/profile-save', 'UserController.update').validator('UpdateProfile').middleware(['auth:session']);
+Route.post('/profile-change', 'UserController.updatePassword').validator('UpdatePassword').middleware(['auth:session']);
 
 Route.get('/logout', 'UserController.logout').middleware(['auth:session']);
 

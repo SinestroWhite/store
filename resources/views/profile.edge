@@ -7,7 +7,13 @@
 @section('content')
     <div class="columns is-centered">
         <div class="column is-three-fifths-desktop">
-            <h1 class="page-title">Profile</h1>
+            <h1 class="page-title profile-title">Profile</h1>
+            @if(flashMessage('message'))
+                <div id="message" class="notification is-{{ flashMessage('type') }}">
+                    <button class="delete" onclick="document.getElementById('message').style.display = 'none';"></button>
+                    {{ flashMessage('message') }}
+                </div>
+            @endif
             @if(hasErrorFor('email'))
                 <p class="form-error">
                     {{ getErrorFor('email') }}
@@ -18,11 +24,25 @@
                     {{ getErrorFor('username') }}
                 </p>
             @endif
+            @if(hasErrorFor('password'))
+                <p class="form-error">
+                    {{ getErrorFor('password') }}
+                </p>
+            @endif
+            @if(hasErrorFor('old_password'))
+                <p class="form-error">
+                    {{ getErrorFor('old_password') }}
+                </p>
+            @endif
             <form id="form" action="none" method="POST">
-                <div class="profile-form">
-                    {{ csrfField() }}
-                    <input class="input" type="text" placeholder="Username" name="username" value="{{ auth.user.username }}"/>
-                    <input class="input" type="email" placeholder="Email" name="email" value="{{ auth.user.email }}"/>
+                {{ csrfField() }}
+                <div class="columns">
+                    <div class="column is-half">
+                        <input class="input" type="text" placeholder="Username" name="username" value="{{ auth.user.username }}"/>
+                    </div>
+                    <div class="column is-half">
+                        <input class="input" type="email" placeholder="Email" name="email" value="{{ auth.user.email }}"/>
+                    </div>
                 </div>
 
                 <button class="button is-primary is-pulled-right modal-button profile-save" type="button" data-target="save">Save</button>
@@ -36,11 +56,11 @@
                         </header>
                         <section class="modal-card-body">
                             <div class="profile-password-margin">
-                                <input class="input" type="password" placeholder="Password" name="password"/>
+                                <input id="password" class="input" type="password" placeholder="Password" name="password"/>
                             </div>
                         </section>
                         <footer class="modal-card-foot">
-                            <button class="button is-primary" type="button" onclick="event.preventDefault(); submit('/profile-save'); return;">Save changes</button>
+                            <button class="button is-primary" type="button" onclick="submitForm('/profile-save', 'password2');">Save changes</button>
                             <button class="button" type="button">Cancel</button>
                         </footer>
                     </div>
@@ -54,12 +74,13 @@
                         </header>
                         <section class="modal-card-body">
                             <div class="profile-password-margin">
-                                <input class="input" type="password" placeholder="Password" name="password" style="margin-bottom: 10px;"/>
+                                <input class="input" type="password" placeholder="Current Password" name="old_password" style="margin-bottom: 10px;"/>
+                                <input id="password2" class="input" type="password" placeholder="Password" name="password" style="margin-bottom: 10px;"/>
                                 <input class="input" type="password" placeholder="Password Confirm" name="password_confirmation"/>
                             </div>
                         </section>
                         <footer class="modal-card-foot">
-                            <button class="button is-primary" type="button" onclick="event.preventDefault(); submit('/profile-change'); return;">Save changes</button>
+                            <button class="button is-primary" type="button" onclick="submitForm('/profile-change', 'password');">Save changes</button>
                             <button class="button" type="button">Cancel</button>
                         </footer>
                     </div>
@@ -71,10 +92,21 @@
 
 @section('scripts')
     <script>
-        function submit(route) {
-        console.log('yes');
-            document.getElementById("form").action = route;
-<!--            document.getElementById("form").submit();-->
+        Element.prototype.remove = function() {
+            this.parentElement.removeChild(this);
+        }
+        NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+            for(var i = this.length - 1; i >= 0; i--) {
+                if(this[i] && this[i].parentElement) {
+                    this[i].parentElement.removeChild(this[i]);
+                }
+            }
+        }
+
+        submitForm = (route, field) => {
+            document.getElementById('form').action = '{{ url }}' + route;
+            document.getElementById(field).remove();
+            document.getElementById('form').submit();
         }
     </script>
 @endsection
