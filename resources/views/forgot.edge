@@ -16,7 +16,7 @@
                 </div>
                 <div class="column is-4 is-offset-2 is-offset-4-tablet">
                     <div class="login-content">
-                        <form action="{{ route('UserController.forgotPassword') }}" method="POST">
+                        <form id="forgot-form" action="{{ route('UserController.forgotPassword') }}" method="POST">
                             {{ csrfField() }}
                             <img src="img/logo.png" />
                             <h2 class="title">Password Recovery</h2>
@@ -29,11 +29,25 @@
                                     {{ getErrorFor('email') }}
                                 </span>
                             @endif
-                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Send Recovery Email</button>
+                            <button class="button is-primary is-fullwidth g-recaptcha"
+                                    data-sitekey="{{ key }}"
+                                    data-callback='onSubmit'
+                                    data-action='submit' style="margin-top: 24px;">Send Recovery Email</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @if(useCaptcha)
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+        function onSubmit(token) {
+            document.getElementById("forgot-form").submit();
+        }
+        </script>
+    @endif
 @endsection

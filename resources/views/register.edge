@@ -17,7 +17,7 @@
                 </div>
                 <div class="column is-4 is-offset-2 is-offset-4-tablet">
                     <div class="login-content">
-                        <form action="{{ route('UserController.register') }}" method="POST">
+                        <form id="register-form" action="{{ route('UserController.register') }}" method="POST">
                             {{ csrfField() }}
                             <img src="img/logo.png" />
                             <h2 class="title">Hey there</h2>
@@ -42,7 +42,10 @@
                                     {{ getErrorFor('password') }}
                                 </span>
                             @endif
-                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;" type="submit">Sign up</button>
+                            <button class="button is-primary is-fullwidth g-recaptcha"
+                                    data-sitekey="{{ key }}"
+                                    data-callback='onSubmit'
+                                    data-action='submit' style="margin-top: 24px;" type="submit">Sign up</button>
                         </form>
                     </div>
                 </div>
@@ -52,26 +55,12 @@
 @endsection
 
 @section('scripts')
-    <script>
-        const inputs = document.querySelectorAll(".input");
-
-
-        function addcl() {
-        let parent = this.parentNode.parentNode;
-        parent.classList.add("focus");
-        }
-
-        function remcl() {
-        let parent = this.parentNode.parentNode;
-        if(this.value == ""){
-        parent.classList.remove("focus");
-        }
-        }
-
-
-        inputs.forEach(input => {
-        input.addEventListener("focus", addcl);
-        input.addEventListener("blur", remcl);
-        });
-    </script>
+    @if(useCaptcha)
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+            function onSubmit(token) {
+                document.getElementById("register-form").submit();
+            }
+        </script>
+    @endif
 @endsection

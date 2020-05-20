@@ -16,7 +16,7 @@
                 </div>
                 <div class="column is-4 is-offset-2 is-offset-4-tablet">
                     <div class="login-content">
-                        <form action="{{ route('UserController.login') }}" method="POST">
+                        <form id="login-form" action="{{ route('UserController.login') }}" method="POST">
                             {{ csrfField() }}
                             <img src="img/logo.png" />
                             <h2 class="title">Welcome Back</h2>
@@ -39,11 +39,25 @@
                                 </span>
                             @endif
                             <a href="/password-reset">Forgotten Password</a>
-                            <button class="button is-primary is-fullwidth" style="margin-top: 24px;">Log in</button>
+                            <button class="button is-primary is-fullwidth g-recaptcha"
+                                    data-sitekey="{{ key }}"
+                                    data-callback='onSubmit'
+                                    data-action='submit' style="margin-top: 24px;">Log in</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @if(useCaptcha)
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+            function onSubmit(token) {
+                document.getElementById("login-form").submit();
+            }
+        </script>
+    @endif
 @endsection
