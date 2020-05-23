@@ -14,3 +14,22 @@
     margin: 15px 30px;
 }
 
+.flex {
+    display: flex;
+    margin: 0 0 15px 0;
+    input[name='name'] {
+        margin-right: 7px;
+    }
+    input[name='phone'] {
+        margin-left: 7px;
+    }
+}
+
+.crop {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 480px;
+}​
+
+ .hi {}

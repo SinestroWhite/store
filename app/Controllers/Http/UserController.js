@@ -6,6 +6,8 @@ const Env = use('Env');
 const Event = use('Event');
 const Hash = use('Hash');
 
+const Address = use('App/Models/Address');
+
 Persona.registerationRules = function () {
     return {
         email: 'required|email|unique:users,email',
@@ -134,8 +136,16 @@ class UserController {
         return response.redirect('/');
     }
 
-    profile ({ view }) {
-        return view.render('profile', {url: Env.get('APP_URL')});
+    async profile({view, auth}) {
+        const addresses = await Address.query()
+            .where('user_id', '=', auth.user.id)
+            .fetch()
+
+        if (addresses.rows.length === 0) {
+            return view.render('profile', {url: Env.get('APP_URL')});
+        }
+
+        return view.render('profile', {url: Env.get('APP_URL'), addresses: addresses.rows});
     }
 
     async update({ request, auth, session, response }) {

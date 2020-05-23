@@ -88,6 +88,147 @@
             </form>
         </div>
     </div>
+
+    <div class="columns is-centered">
+        <div class="column is-three-fifths-desktop">
+            <h1 class="page-title profile-title">Addresses</h1>
+            @if(hasErrorFor('name'))
+            <p class="form-error">
+                {{ getErrorFor('name') }}
+            </p>
+            @endif
+            @if(hasErrorFor('phone'))
+            <p class="form-error">
+                {{ getErrorFor('phone') }}
+            </p>
+            @endif
+            @if(hasErrorFor('address'))
+            <p class="form-error">
+                {{ getErrorFor('address') }}
+            </p>
+            @endif
+            @if(addresses)
+            <table class="table is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Management</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @each(address in addresses)
+                        <tr>
+                            <th>{{ address.name }}</th>
+                            <th>{{ address.phone }}</th>
+                            <td>
+                                <p class="crop">
+                                    {{ address.address }}
+                                </p>
+                            </td>
+                            <td>
+                                <button class="button is-primary modal-button" data-target="edit-address-{{ address.id }}" data-tooltip="Edit">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </span>
+                                </button>
+
+                                <button class="button is-danger modal-button" data-target="delete-address-{{ address.id }}" data-tooltip="Delete">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                    @endeach
+                </tbody>
+            </table>
+            @else
+                <p style="text-align: center;">You don't have any addresses. Please, create a new one.</p>
+            @endif
+
+            <button class="button is-primary modal-button" type="button" data-target="new-address">New Address</button>
+
+            <form action="/address" method="POST">
+                {{ csrfField() }}
+                <div class="modal" id="new-address">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">New Address</p>
+                            <button class="delete" aria-label="close" type="button"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="profile-password-margin">
+                                <div class="flex" style="display: flex">
+                                    <input class="input" type="text" placeholder="Name" name="name" value="{{ old('name', '') }}"/>
+                                    <input class="input" type="text" placeholder="Phone" name="phone" value="{{ old('phone', '') }}"/>
+                                </div>
+                                <input class="input" type="text" placeholder="Address" name="address" value="{{ old('address', '') }}"/>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-primary" type="submit">Add</button>
+                            <button class="button" type="button">Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+            </form>
+
+            @each(address in addresses)
+                <form action="/address/update/{{ address.id }}" method="PATCH">
+                    {{ csrfField() }}
+                    <div class="modal" id="edit-address-{{ address.id }}">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">Edit Address</p>
+                                <button class="delete" aria-label="close" type="button"></button>
+                            </header>
+                            <section class="modal-card-body">
+                                <div class="profile-password-margin">
+                                    <div class="flex" style="display: flex">
+                                        <input class="input" type="text" placeholder="Name" name="name" value="{{ address.name }}"/>
+                                        <input class="input" type="text" placeholder="Phone" name="phone" value="{{ address.phone }}"/>
+                                    </div>
+                                    <input class="input" type="text" placeholder="Address" name="address" value="{{ address.address }}"/>
+                                </div>
+                            </section>
+                            <footer class="modal-card-foot">
+                                <button class="button is-primary" type="submit">Save Changes</button>
+                                <button class="button" type="button">Cancel</button>
+                            </footer>
+                        </div>
+                    </div>
+                </form>
+            @endeach
+
+            @each(address in addresses)
+                <form action="/address/delete/{{ address.id }}" method="DELETE">
+                    {{ csrfField() }}
+                    <div class="modal" id="delete-address-{{ address.id }}">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">Delete Address</p>
+                                <button class="delete" aria-label="close" type="button"></button>
+                            </header>
+                            <section class="modal-card-body">
+                                <div class="profile-password-margin">
+                                    <p style="text-align: center;">Are you sure you want to delete the address "{{ address.address }}"?</p>
+                                </div>
+                            </section>
+                            <footer class="modal-card-foot">
+                                <button class="button" type="submit">Yes, delete it</button>
+                                <button class="button is-primary" type="button">Cancel</button>
+                            </footer>
+                        </div>
+                    </div>
+                </form>
+            @endeach
+        </div>
+    </div>
 @endsection
 
 @section('scripts')

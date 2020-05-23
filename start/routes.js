@@ -42,6 +42,10 @@ Route.get('/logout', 'UserController.logout').middleware(['auth:session']);
 
 Route.get('dashboard', 'DashboardController.index').middleware(['auth:session']);
 
+Route.get('/address/delete/:id', 'AddressController.delete');
+Route.get('/address/update/:id', 'AddressController.update').validator('CreateAddress');
+Route.post('/address', 'AddressController.create').validator('CreateAddress');
+
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');
 // Route.post('login', 'UserController.login');

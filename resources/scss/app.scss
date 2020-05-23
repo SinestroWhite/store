@@ -3,6 +3,8 @@
 *
 */
 
+@charset "UTF-8";
+
 // Import styles
 @import "login";
 @import "profile";
@@ -10,6 +12,7 @@
 
 // Import Bulma's core
 @import "~bulma/sass/utilities/_all";
+@import "~@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 
 // Set your colors
 $primary-invert: findColorInvert($primary);
