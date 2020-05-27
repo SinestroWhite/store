@@ -46,6 +46,16 @@ Route.get('/address/delete/:id', 'AddressController.delete');
 Route.get('/address/update/:id', 'AddressController.update').validator('CreateAddress');
 Route.post('/address', 'AddressController.create').validator('CreateAddress');
 
+Route.resource('categories', 'CategoryController').validator(new Map([
+    ['categories.store', 'ValidateCategory'],
+    ['categories.update', 'ValidateCategory']
+]))
+
+Route.resource('products', 'ProductController').validator(new Map([
+    ['products.store', 'ValidateProduct'],
+    ['products.update', 'ValidateProduct']
+]))
+
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');
 // Route.post('login', 'UserController.login');

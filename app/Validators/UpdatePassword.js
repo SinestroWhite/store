@@ -10,7 +10,7 @@ class UpdatePassword {
                 rule('confirmed'),
                 rule('max', '255'),
                 rule('min', '8'),
-                rule('regex', new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$')),
+                rule('regex', new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9!@#$%^&*\?\+])(?!.*[()_\-\`\\/\"\'|\[\]}{:;'/>.<,])(?!.*\s)(?!.*\s).{8,}$/)),
             ],
             'old_password': 'required'
         }
