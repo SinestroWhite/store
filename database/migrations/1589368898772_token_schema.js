@@ -11,8 +11,8 @@ class TokenSchema extends Schema {
     }
 
     down() {
-        this.table('tokens', (table) => {
-            table.dropIfExists('user_id')
+        this.table('tokens', () => {
+            this.dropIfExists('user_id')
         })
     }
 }

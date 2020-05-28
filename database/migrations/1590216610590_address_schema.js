@@ -11,8 +11,8 @@ class AddressSchema extends Schema {
     }
 
     down() {
-        this.table('addresses', (table) => {
-            table.dropIfExists('phone')
+        this.table('addresses', () => {
+            this.dropIfExists('phone')
         })
     }
 }

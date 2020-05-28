@@ -1,11 +1,12 @@
 'use strict'
 
 const Category = use('App/Models/Category')
+const Currency = use('App/Models/Currency')
 const Product = use('App/Models/Product')
 
 class ProductController {
     async index({view}) {
-        const products = await Product.all();
+        const products = await Product.query().with('category').with('currency').fetch();
         if (products.rows.length === 0) {
             return view.render('product.index')
         }
@@ -13,23 +14,28 @@ class ProductController {
     }
 
     async create({view}) {
-        return view.render('product.create');
+        const currencies = await Currency.all();
+        const categories = await Category.all();
+        return view.render('product.create', { currencies: currencies.rows, categories: categories.rows });
     }
 
     async store({request, response, session, params}) {
         let product = request.all()
+        delete product._csrf;
 
-        const posted = await Category.find(params.id).products().create({
+        const posted = await Product.create({
             ...product
         });
 
         session.flash({message: 'The product has been created!', type: 'success'});
-        return response.redirect('back');
+        return response.redirect('/products');
     }
 
     async edit({params, view}) {
         const product = await Product.find(params.id);
-        return view.render('product.edit', {product});
+        const currencies = await Currency.all();
+        const categories = await Category.all();
+        return view.render('product.edit', { product, currencies: currencies.rows, categories: categories.rows });
     }
 
     async update({response, request, session, params}) {

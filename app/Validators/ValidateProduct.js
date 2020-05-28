@@ -11,7 +11,7 @@ class ValidateProduct {
             'quantity': 'required|number|min: 0',
             'is_active': 'required|boolean',
             'category_id': 'required|exists:categories,id',
-            'currency_id': 'required|exists:currency,id',
+            'currency_id': 'required|exists:currencies,id',
         }
     }
 

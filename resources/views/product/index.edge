@@ -1,54 +1,62 @@
 @layout('/layouts/default')
 
 @section('title')
-    Categories
+    Products
 @endsection
 
 @section('content')
     <div class="columns is-centered">
         <div class="column is-three-fifths-desktop">
-            <h1 class="page-title profile-title">Categories</h1>
-            <a class="button is-primary is-pulled-right" data-tooltip="Create New Category" style="margin-top:-65px;" href="{{ route('categories.create') }}">
+            <h1 class="page-title profile-title">Products</h1>
+            <a class="button is-primary is-pulled-right" data-tooltip="Add New Product" style="margin-top:-65px;" href="{{ route('products.create') }}">
                 <span class="icon is-small">
                     <i class="fas fa-plus"></i>
                 </span>
             </a>
-            @if(categories)
+            @if(products)
                 <table class="table is-hoverable is-fullwidth">
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Currency</th>
                             <th>Description</th>
                             <th>Active</th>
                             <th>Management</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @each(category in categories)
+                        @each(product in products)
                             <tr>
-                                <th>{{ category.name }}</th>
-                                <th>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.$relations.category.name }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.$relations.currency.name }}</td>
+                                <td>
                                     <p class="crop">
-                                        {{ category.description }}
+                                        {{ product.description }}
                                     </p>
-                                </th>
+                                </td>
                                 <td>
                                     <div class="field" style="margin-left: 15px;">
                                         <div class="control">
                                             <label class="checkbox">
-                                                <input id="checkbox" type="checkbox" {{ category.is_active ? 'checked' : '' }} disabled/>
+                                                <input id="checkbox" type="checkbox" {{ product.is_active ? 'checked' : '' }} disabled/>
                                             </label>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <a class="button is-primary" href="{{ route('categories.edit', {id: category.id}) }}" data-tooltip="Edit">
+                                    <a class="button is-primary" href="{{ route('products.edit', {id: product.id}) }}" data-tooltip="Edit">
                                         <span class="icon is-small">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
                                     </a>
 
-                                    <button class="button is-danger modal-button" data-target="delete-category-{{ category.id }}" data-tooltip="Delete">
+                                    <button class="button is-danger modal-button" data-target="delete-product-{{ product.id }}" data-tooltip="Delete">
                                         <span class="icon is-small">
                                             <i class="fas fa-trash"></i>
                                         </span>
@@ -59,23 +67,23 @@
                     </tbody>
                 </table>
             @else
-                <p style="text-align: center;">There are no categories. You can create one by clicking the "+" button.</p>
+                <p style="text-align: center;">There are no products. You can create one by clicking the "+" button.</p>
             @endif
 
-            @each(category in categories)
-                <form action="{{ route('categories.destroy', {id:category.id }) }}?_method=DELETE" method="POST">
+            @each(product in products)
+                <form action="{{ route('products.destroy', { id:product.id }) }}?_method=DELETE" method="POST">
                     {{ csrfField() }}
                     <input type="hidden" name="_method" value="DELETE"/>
-                    <div class="modal" id="delete-category-{{ category.id }}">
+                    <div class="modal" id="delete-product-{{ product.id }}">
                         <div class="modal-background"></div>
                         <div class="modal-card">
                             <header class="modal-card-head">
-                                <p class="modal-card-title">Delete Category</p>
+                                <p class="modal-card-title">Delete Product</p>
                                 <button class="delete" aria-label="close" type="button"></button>
                             </header>
                             <section class="modal-card-body">
                                 <div class="profile-password-margin">
-                                    <p style="text-align: center;">Are you sure you want to delete the category "{{ category.name }}"?</p>
+                                    <p style="text-align: center;">Are you sure you want to delete the product "{{ currency.name }}"?</p>
                                 </div>
                             </section>
                             <footer class="modal-card-foot">

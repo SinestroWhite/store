@@ -1,0 +1,113 @@
+@layout('/layouts/default')
+
+@section('title')
+    Create Currency
+@endsection
+
+@section('css')
+    <style>
+        div.select.is-primary::after {
+<!--            margin-bottom: -50px;-->
+        }
+    </style>
+@endsection
+
+@section('content')
+    <form id="form" action="{{ route('currencies.store') }}" method="POST">
+        <div class="columns is-centered">
+            <div class="column is-three-fifths-desktop">
+                <h1 class="page-title profile-title">Add New Currency</h1>
+                {{ csrfField() }}
+                @if(hasErrorFor('name'))
+                <p class="form-error">
+                    {{ getErrorFor('name') }}
+                </p>
+                @endif
+                @if(hasErrorFor('is_active'))
+                <p class="form-error">
+                    {{ getErrorFor('is_active') }}
+                </p>
+                @endif
+                @if(hasErrorFor('symbol'))
+                <p class="form-error">
+                    {{ getErrorFor('symbol') }}
+                </p>
+                @endif
+                @if(hasErrorFor('location'))
+                <p class="form-error">
+                    {{ getErrorFor('location') }}
+                </p>
+                @endif
+                <div class="columns">
+                    <div class="column is-two-fifths">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" name="name" type="text" placeholder="Euro" value="{{ old('name', '') }}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifths">
+                        <div class="field">
+                            <label class="label">Symbol</label>
+                            <div class="control">
+                                <input class="input" name="symbol" type="text" placeholder="€" max="1" value="{{ old('symbol', '') }}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <div class="field" style="margin-top: 40px;">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input id="checkbox" type="checkbox" {{ old('is_active', '') ? 'checked' : '' }}/>
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-three-fifths">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">Symbol Location</label>
+                                <div class="select is-primary is-fullwidth">
+                                    <select name="location">
+                                        <option {{ old('location', '') == 'front' ? 'selected' : '' }} value="front">At the front</option>
+                                        <option {{ old('location', '') == 'back' ? 'selected' : '' }} value="back">At the back</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-two-fifths">
+                        <div class="field">
+                            <label class="label">Code</label>
+                            <div class="control">
+                                <input class="input" name="code" type="text" placeholder="EUR" max="3" value="{{ old('code', '') }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;" type="button" onclick="saveCurrency()">Save</button>
+            </div>
+        </div>
+    </form>
+@endsection
+
+@section('scripts')
+    <script>
+        function saveCurrency() {
+            let node = document.createElement("input");
+            node.setAttribute("type", "hidden");
+            node.setAttribute("name", "is_active");
+            if(document.getElementById("checkbox").checked) {
+                node.setAttribute("value", "true");
+            } else {
+                node.setAttribute("value", "false");
+            }
+            document.getElementById("form").appendChild(node);
+            document.getElementById("form").submit();
+        }
+    </script>
+@endsection

@@ -1,54 +1,57 @@
 @layout('/layouts/default')
 
 @section('title')
-    Categories
+    Currencies
 @endsection
 
 @section('content')
     <div class="columns is-centered">
         <div class="column is-three-fifths-desktop">
-            <h1 class="page-title profile-title">Categories</h1>
-            <a class="button is-primary is-pulled-right" data-tooltip="Create New Category" style="margin-top:-65px;" href="{{ route('categories.create') }}">
+            <h1 class="page-title profile-title">Currencies</h1>
+            <a class="button is-primary is-pulled-right" data-tooltip="Add New Currency" style="margin-top:-65px;" href="{{ route('currencies.create') }}">
                 <span class="icon is-small">
                     <i class="fas fa-plus"></i>
                 </span>
             </a>
-            @if(categories)
+            @if(currencies)
                 <table class="table is-hoverable is-fullwidth">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
+                            <th>Code</th>
+                            <th>Symbol</th>
+                            <th>Symbol Location</th>
                             <th>Active</th>
                             <th>Management</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @each(category in categories)
+                        @each(currency in currencies)
                             <tr>
-                                <th>{{ category.name }}</th>
-                                <th>
-                                    <p class="crop">
-                                        {{ category.description }}
-                                    </p>
-                                </th>
+                                <td>{{ currency.name }}</td>
+                                <td>{{ currency.code }}</td>
+                                <td>{{ currency.symbol }}</td>
+                                <td>
+                                    {{ currency.location == 'front' ? 'At the front' : '' }}
+                                    {{ currency.location == 'back' ? 'At the back' : '' }}
+                                </td>
                                 <td>
                                     <div class="field" style="margin-left: 15px;">
                                         <div class="control">
                                             <label class="checkbox">
-                                                <input id="checkbox" type="checkbox" {{ category.is_active ? 'checked' : '' }} disabled/>
+                                                <input id="checkbox" type="checkbox" {{ currency.is_active ? 'checked' : '' }} disabled/>
                                             </label>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <a class="button is-primary" href="{{ route('categories.edit', {id: category.id}) }}" data-tooltip="Edit">
+                                    <a class="button is-primary" href="{{ route('currencies.edit', {id: currency.id}) }}" data-tooltip="Edit">
                                         <span class="icon is-small">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
                                     </a>
 
-                                    <button class="button is-danger modal-button" data-target="delete-category-{{ category.id }}" data-tooltip="Delete">
+                                    <button class="button is-danger modal-button" data-target="delete-currency-{{ currency.id }}" data-tooltip="Delete">
                                         <span class="icon is-small">
                                             <i class="fas fa-trash"></i>
                                         </span>
@@ -59,23 +62,23 @@
                     </tbody>
                 </table>
             @else
-                <p style="text-align: center;">There are no categories. You can create one by clicking the "+" button.</p>
+                <p style="text-align: center;">There are no currencies. You can create one by clicking the "+" button.</p>
             @endif
 
-            @each(category in categories)
-                <form action="{{ route('categories.destroy', {id:category.id }) }}?_method=DELETE" method="POST">
+            @each(currency in currencies)
+                <form action="{{ route('currencies.destroy', { id:currency.id }) }}?_method=DELETE" method="POST">
                     {{ csrfField() }}
                     <input type="hidden" name="_method" value="DELETE"/>
-                    <div class="modal" id="delete-category-{{ category.id }}">
+                    <div class="modal" id="delete-currency-{{ currency.id }}">
                         <div class="modal-background"></div>
                         <div class="modal-card">
                             <header class="modal-card-head">
-                                <p class="modal-card-title">Delete Category</p>
+                                <p class="modal-card-title">Delete Currency</p>
                                 <button class="delete" aria-label="close" type="button"></button>
                             </header>
                             <section class="modal-card-body">
                                 <div class="profile-password-margin">
-                                    <p style="text-align: center;">Are you sure you want to delete the category "{{ category.name }}"?</p>
+                                    <p style="text-align: center;">Are you sure you want to delete the currency "{{ currency.name }}"?</p>
                                 </div>
                             </section>
                             <footer class="modal-card-foot">

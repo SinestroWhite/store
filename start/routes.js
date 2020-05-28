@@ -56,6 +56,11 @@ Route.resource('products', 'ProductController').validator(new Map([
     ['products.update', 'ValidateProduct']
 ]))
 
+Route.resource('currencies', 'CurrencyController').validator(new Map([
+    ['currency.store', 'ValidateCurrency'],
+    ['currency.update', 'ValidateCurrency']
+]))
+
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');
 // Route.post('login', 'UserController.login');
