@@ -10,6 +10,15 @@ class Product extends Model {
     category() {
         return this.belongsTo('App/Models/Category')
     }
+    static scopeSearch(query, keyword) {
+        if (keyword) {
+            return query
+                .where('name', 'like', '%' + keyword + '%')
+                .orWhere('description', 'like', '%' + keyword + '%')
+        } else {
+            return query;
+        }
+    }
 }
 
 module.exports = Product

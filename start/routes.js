@@ -17,7 +17,6 @@
 const Route = use('Route');
 
 Route.on('/').render('welcome');
-const User = use('App/Models/User')
 
 Route.get('/register', 'UserController.displayRegister');
 Route.post('/register', 'UserController.register').middleware('throttle:5').validator('CreateUser');
@@ -40,26 +39,38 @@ Route.post('/profile-change', 'UserController.updatePassword').validator('Update
 
 Route.get('/logout', 'UserController.logout').middleware(['auth:session']);
 
-Route.get('dashboard', 'DashboardController.index').middleware(['auth:session']);
-
 Route.get('/address/delete/:id', 'AddressController.delete');
 Route.get('/address/update/:id', 'AddressController.update').validator('CreateAddress');
 Route.post('/address', 'AddressController.create').validator('CreateAddress');
 
+// Admin Back Office
+
+Route.get('/admin', 'AdminController.displayLogin');
+Route.post('/admin', 'AdminController.login').middleware('throttle:5').validator('LoginUser');
+
+Route.get('/admin-profile', 'AdminController.profile').middleware(['auth:adminAuth']);
+Route.post('/admin-profile-save', 'AdminController.update').middleware(['auth:adminAuth']).validator('UpdateAdminProfile');
+Route.post('/admin-profile-change', 'AdminController.updatePassword').validator('UpdatePassword').middleware(['auth:adminAuth']);
+
+Route.get('/admin-logout', 'AdminController.logout').middleware(['auth:adminAuth']);
+
+Route.on('/dashboard').render('admin.dashboard').middleware(['auth:adminAuth']);
+// Route.get('/dashboard', 'DashboardController.index')
+
 Route.resource('categories', 'CategoryController').validator(new Map([
     ['categories.store', 'ValidateCategory'],
     ['categories.update', 'ValidateCategory']
-]))
+])).middleware(['auth:adminAuth'])
 
 Route.resource('products', 'ProductController').validator(new Map([
     ['products.store', 'ValidateProduct'],
     ['products.update', 'ValidateProduct']
-]))
+])).middleware(['auth:adminAuth'])
 
 Route.resource('currencies', 'CurrencyController').validator(new Map([
     ['currency.store', 'ValidateCurrency'],
     ['currency.update', 'ValidateCurrency']
-]))
+])).middleware(['auth:adminAuth'])
 
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');

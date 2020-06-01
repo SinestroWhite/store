@@ -1,13 +1,21 @@
-@layout('/layouts/default')
+@layout('/layouts/admin')
 
 @section('title')
     Products
 @endsection
 
 @section('content')
-    <div class="columns is-centered">
+    <div class="columns is-centered" style="margin: 30px 0;">
         <div class="column is-three-fifths-desktop">
-            <h1 class="page-title profile-title">Products</h1>
+            <form action="/products" method="get">
+                <input class="input" style="max-width: 150px;" name="search" type="text" placeholder="LED TV" value="{{ keyword }}"/>
+                <button class="button">
+                    <span class="icon is-small">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </button>
+            </form>
+            <h1 class="page-title profile-title" style="margin-top: -40px;">Products</h1>
             <a class="button is-primary is-pulled-right" data-tooltip="Add New Product" style="margin-top:-65px;" href="{{ route('products.create') }}">
                 <span class="icon is-small">
                     <i class="fas fa-plus"></i>
@@ -67,7 +75,11 @@
                     </tbody>
                 </table>
             @else
-                <p style="text-align: center;">There are no products. You can create one by clicking the "+" button.</p>
+                @if(keyword)
+                    <p style="text-align: center;">No results have been found.</p>
+                @else
+                    <p style="text-align: center;">There are no products. You can create one by clicking the "+" button.</p>
+                @endif
             @endif
 
             @each(product in products)

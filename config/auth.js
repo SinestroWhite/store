@@ -37,6 +37,23 @@ module.exports = {
 
     /*
     |--------------------------------------------------------------------------
+    | Admin Auth
+    |--------------------------------------------------------------------------
+    |
+    | Session authenticator makes use of sessions to authenticate a user.
+    | Session authentication is always persistent.
+    |
+    */
+    adminAuth: {
+        serializer: 'lucid',
+        model: 'App/Models/Admin',
+        scheme: 'session',
+        uid: 'email',
+        password: 'password',
+    },
+
+    /*
+    |--------------------------------------------------------------------------
     | Basic Auth
     |--------------------------------------------------------------------------
     |

@@ -1,0 +1,62 @@
+@layout('/layouts/default')
+
+@section('title')
+    Admin Log In
+@endsection
+
+@section('content')
+    <div class="content">
+        <img class="wave" src="img/wave.svg" />
+        <div class="container login-container">
+            <div class="columns is-vcentered" style="display: flex; height: calc(100vh - 70px);">
+                <div class="image-column column is-4 is-offset-1">
+                    <div class="img">
+                        <img src="img/admin.svg"/>
+                    </div>
+                </div>
+                <div class="column is-4 is-offset-2 is-offset-4-tablet">
+                    <div class="login-content">
+                        <form id="login-form" action="{{ route('AdminController.login') }}" method="POST">
+                            {{ csrfField() }}
+                            <img src="img/logo.png" />
+                            <h2 class="title">Admin Log In</h2>
+                            @if(flashMessage('loginError'))
+                                <span class="form-error">{{ flashMessage('loginError') }}</span>
+                            @endif
+                            @if(flashMessage('message'))
+                                <span class="form-error">{{ flashMessage('message') }}</span>
+                            @endif
+                            <input class="input" type="email" name="email" placeholder="Email" value="{{ old('email', '') }}"/>
+                            @if(hasErrorFor('email'))
+                                <span class="form-error">
+                                    {{ getErrorFor('email') }}
+                                </span>
+                            @endif
+                            <input class="input" type="password" name="password" placeholder="Password"/>
+                            @if(hasErrorFor('password'))
+                                <span>
+                                    {{ getErrorFor('password') }}
+                                </span>
+                            @endif
+                            <button class="button is-primary is-fullwidth g-recaptcha"
+                                    data-sitekey="{{ key }}"
+                                    data-callback='onSubmit'
+                                    data-action='submit' style="margin-top: 24px;">Log in</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    @if(useCaptcha)
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+            function onSubmit(token) {
+                document.getElementById("login-form").submit();
+            }
+        </script>
+    @endif
+@endsection

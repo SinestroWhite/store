@@ -5,12 +5,17 @@ const Currency = use('App/Models/Currency')
 const Product = use('App/Models/Product')
 
 class ProductController {
-    async index({view}) {
-        const products = await Product.query().with('category').with('currency').fetch();
+    async index({request, view}) {
+        const keyword = request.get().search;
+        const products = await Product.query()
+            .search(keyword)
+            .with('category')
+            .with('currency')
+            .fetch();
         if (products.rows.length === 0) {
-            return view.render('product.index')
+            return view.render('product.index', {keyword})
         }
-        return view.render('product.index', {products: products.rows})
+        return view.render('product.index', {products: products.rows, keyword})
     }
 
     async create({view}) {

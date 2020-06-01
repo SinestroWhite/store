@@ -2,8 +2,8 @@
 
 class DashboardController {
 
-    index({ view }) {
-        view.render('dashboard');
+    index({ view, auth }) {
+        view.render('admin.dashboard');
     }
 
 }

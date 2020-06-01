@@ -1,0 +1,112 @@
+@layout('/layouts/admin')
+
+@section('title')
+    Profile
+@endsection
+
+@section('content')
+    <div class="columns is-centered">
+        <div class="column is-three-fifths-desktop">
+            <h1 class="page-title profile-title">Profile</h1>
+            @if(flashMessage('message'))
+                <div id="message" class="notification is-{{ flashMessage('type') }}">
+                    <button class="delete" onclick="document.getElementById('message').style.display = 'none';"></button>
+                    {{ flashMessage('message') }}
+                </div>
+            @endif
+            @if(hasErrorFor('email'))
+                <p class="form-error">
+                    {{ getErrorFor('email') }}
+                </p>
+            @endif
+            @if(hasErrorFor('username'))
+                <p class="form-error">
+                    {{ getErrorFor('username') }}
+                </p>
+            @endif
+            @if(hasErrorFor('password'))
+                <p class="form-error">
+                    {{ getErrorFor('password') }}
+                </p>
+            @endif
+            @if(hasErrorFor('old_password'))
+                <p class="form-error">
+                    {{ getErrorFor('old_password') }}
+                </p>
+            @endif
+            <form id="form" action="none" method="POST">
+                {{ csrfField() }}
+                <div class="columns">
+                    <div class="column is-half">
+                        <input class="input" type="text" placeholder="Username" name="username" value="{{ auth.user.username }}"/>
+                    </div>
+                    <div class="column is-half">
+                        <input class="input" type="email" placeholder="Email" name="email" value="{{ auth.user.email }}"/>
+                    </div>
+                </div>
+
+                <button class="button is-primary is-pulled-right modal-button profile-save" type="button" data-target="save">Save</button>
+                <button class="button is-primary is-pulled-right modal-button profile-save" type="button" data-target="change">Change Password</button>
+                <div class="modal" id="save">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Save</p>
+                            <button class="delete" aria-label="close" type="button"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="profile-password-margin">
+                                <input id="password" class="input" type="password" placeholder="Password" name="password"/>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-primary" type="button" onclick="submitForm('/admin-profile-save', 'password2');">Save changes</button>
+                            <button class="button" type="button">Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+                <div class="modal" id="change">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Change Password</p>
+                            <button class="delete" aria-label="close" type="button"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="profile-password-margin">
+                                <input class="input" type="password" placeholder="Current Password" name="old_password" style="margin-bottom: 10px;"/>
+                                <input id="password2" class="input" type="password" placeholder="Password" name="password" style="margin-bottom: 10px;"/>
+                                <input class="input" type="password" placeholder="Password Confirm" name="password_confirmation"/>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-primary" type="button" onclick="submitForm('/admin-profile-change', 'password');">Save changes</button>
+                            <button class="button" type="button">Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        Element.prototype.remove = function() {
+            this.parentElement.removeChild(this);
+        }
+        NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+            for(var i = this.length - 1; i >= 0; i--) {
+                if(this[i] && this[i].parentElement) {
+                    this[i].parentElement.removeChild(this[i]);
+                }
+            }
+        }
+
+        submitForm = (route, field) => {
+            document.getElementById('form').action = '{{ url }}' + route;
+            document.getElementById(field).remove();
+            document.getElementById('form').submit();
+        }
+    </script>
+@endsection
