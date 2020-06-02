@@ -15,8 +15,20 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route');
+const Admin = use('App/Models/Admin');
 
 Route.on('/').render('welcome');
+
+Route.get('/search', 'ProductController.search')
+Route.get('/review/:id', 'ProductController.review')
+
+// Route.get('/', ({ auth, view, response }) => {
+//     // if (auth.user instanceof Admin) {
+//     //     response.redirect('/dashboard')
+//     // } else {
+//     view.render('welcome')
+//     // }
+// })
 
 Route.get('/register', 'UserController.displayRegister');
 Route.post('/register', 'UserController.register').middleware('throttle:5').validator('CreateUser');
@@ -66,6 +78,12 @@ Route.resource('products', 'ProductController').validator(new Map([
     ['products.store', 'ValidateProduct'],
     ['products.update', 'ValidateProduct']
 ])).middleware(['auth:adminAuth'])
+
+Route.get('/variations/:id', 'VariationController.index').middleware(['auth:adminAuth']);
+Route.post('/variations/save', 'VariationController.store').middleware(['auth:adminAuth']);
+Route.delete('/variations/delete/:id', 'VariationController.destroy').middleware(['auth:adminAuth']).as('variations.destroy');
+
+Route.get('/image/:name', 'VariationController.showImage');
 
 Route.resource('currencies', 'CurrencyController').validator(new Map([
     ['currency.store', 'ValidateCurrency'],

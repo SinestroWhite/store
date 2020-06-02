@@ -10,6 +10,12 @@ class Product extends Model {
     category() {
         return this.belongsTo('App/Models/Category')
     }
+    variations() {
+        return this.hasMany('App/Models/Variation')
+    }
+    images() {
+        return this.manyThrough('App/Models/Variation', 'images', 'id', 'product_id')
+    }
     static scopeSearch(query, keyword) {
         if (keyword) {
             return query

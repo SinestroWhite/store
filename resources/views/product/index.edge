@@ -30,24 +30,22 @@
                             <th>Quantity</th>
                             <th>Price</th>
                             <th>Currency</th>
-                            <th>Description</th>
                             <th>Active</th>
                             <th>Management</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @each(product in products)
+                        @each(product in products.rows)
                             <tr>
-                                <td>{{ product.name }}</td>
+                                <td>
+                                    <p class="crop">
+                                        {{ product.name }}
+                                    </p>
+                                </td>
                                 <td>{{ product.$relations.category.name }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td>{{ product.price }}</td>
                                 <td>{{ product.$relations.currency.name }}</td>
-                                <td>
-                                    <p class="crop">
-                                        {{ product.description }}
-                                    </p>
-                                </td>
                                 <td>
                                     <div class="field" style="margin-left: 15px;">
                                         <div class="control">
@@ -74,6 +72,33 @@
                         @endeach
                     </tbody>
                 </table>
+                <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                    @if(products.pages.page == 1)
+                        <a class="pagination-previous is-disabled">&lsaquo;</a>
+                    @else
+                        <a class="pagination-previous" href="javascript:updateURLParameter(document.URL, 'page', {{ products.pages.page - 1 }})">&lsaquo;</a>
+                    @endif
+
+                    <ul class="pagination-list">
+                        @if(products.pages.total == 1)
+                            <li><a class="pagination-link is-disabled" aria-label="Goto page 1">1</a></li>
+                        @else
+                            @each(page in range(1, products.pages.lastPage + 1))
+                                @if(page == products.pages.page)
+                                    <li><a class="pagination-link is-current" aria-label="{{ 'Goto page ' + page }}">{{ page }}</a></li>
+                                @else
+                                    <li><a class="pagination-link" href="javascript:updateURLParameter(document.URL, 'page', {{ page }});" aria-label="{{ 'Goto page ' + page }}">{{ page }}</a></li>
+                                @endif
+                            @endeach
+                        @endif
+                    </ul>
+
+                    @if(products.pages.page == products.pages.lastPage)
+                        <a class="pagination-next is-disabled">&rsaquo;</a>
+                    @else
+                        <a class="pagination-next" href="javascript:updateURLParameter(document.URL, 'page', {{ products.pages.page + 1 }})">&rsaquo;</a>
+                    @endif
+                </nav>
             @else
                 @if(keyword)
                     <p style="text-align: center;">No results have been found.</p>
@@ -82,7 +107,7 @@
                 @endif
             @endif
 
-            @each(product in products)
+            @each(product in products.rows)
                 <form action="{{ route('products.destroy', { id:product.id }) }}?_method=DELETE" method="POST">
                     {{ csrfField() }}
                     <input type="hidden" name="_method" value="DELETE"/>
@@ -108,4 +133,40 @@
             @endeach
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        const list = document.querySelectorAll('a[href^="javascript:"], form[action^="javascript:"]');
+        var x, link;
+        for (x = 0; x < list.length; ++x) {
+            link = list[x];
+            if (link.href) {
+                link.href = new Function('return ' + link.href.substring(11)).call();
+            } else {
+                link.action = new Function('return ' + link.action.substring(11)).call();
+            }
+        }
+
+        function updateURLParameter(url, param, paramVal) {
+            let newAdditionalURL = "";
+            let tempArray = url.split("?");
+            let baseURL = tempArray[0];
+            let additionalURL = tempArray[1];
+            let temp = "";
+            if (additionalURL) {
+                tempArray = additionalURL.split("&");
+                for (var i=0; i < tempArray.length; i++) {
+                    if (tempArray[i].split('=')[0] != param) {
+                        newAdditionalURL += temp + tempArray[i];
+                        temp = "&";
+                    }
+                }
+            }
+
+            let rows_txt = temp + "" + param + "=" + paramVal;
+            document.URL = baseURL + "?" + newAdditionalURL + rows_txt;
+            return baseURL + "?" + newAdditionalURL + rows_txt;
+        }
+    </script>
 @endsection

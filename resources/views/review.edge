@@ -1,0 +1,29 @@
+@layout('/layouts/default')
+
+@section('title')
+    Welcome
+@endsection
+
+@section('content')
+
+    @loggedIn
+        @if(auth.user.account_status == 'pending' && !flashMessage('message'))
+            <div id="pendingMessage" class="columns is-centered">
+                <div class="column is-three-fifths">
+                    <div class="notification is-warning">
+                        <button class="delete" onclick="document.getElementById('pendingMessage').style.display = 'none';"></button>
+                        You haven't confirmed your email! Please, take a minute to do so. We can resend another email from <a href="/email-resend">here</a>.
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endloggedIn
+
+    <div class="columns is-centered" style="margin-top: 30px;">
+        <div class="column is-three-fifths">
+            <img src="/image/{{ product.$relations.images.rows[0].name }}" style="width: 150px; height: auto;"/>
+            {{ product.name }}
+        </div>
+    </div>
+
+@endsection

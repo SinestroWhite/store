@@ -3,19 +3,57 @@
 const Category = use('App/Models/Category')
 const Currency = use('App/Models/Currency')
 const Product = use('App/Models/Product')
+const Variation = use('App/Models/Variation')
 
 class ProductController {
     async index({request, view}) {
         const keyword = request.get().search;
+        let page  = request.get().page;
+        page = page ? page : 1;
         const products = await Product.query()
             .search(keyword)
             .with('category')
             .with('currency')
-            .fetch();
+            .paginate(page ? page : 1, 10);
         if (products.rows.length === 0) {
             return view.render('product.index', {keyword})
         }
-        return view.render('product.index', {products: products.rows, keyword})
+        return view.render('product.index', {products, keyword})
+    }
+
+    async search({request, view}) {
+        const keyword = request.get().search;
+        let page  = request.get().page;
+        page = page ? page : 1;
+        const products = await Product.query()
+            .search(keyword)
+            .with('category')
+            .with('currency')
+            .with('variations')
+            .with('images')
+            .paginate(page ? page : 1, 10);
+        if (products.rows.length === 0) {
+            return view.render('search', {keyword})
+        }
+
+        // products.rows = products.rows.map((product) => {
+        //     let item = product;
+        //     item.$relations.images.rows = [...new Set(product.$relations.images.rows)];
+        //     return item;
+        // })
+
+        return view.render('search', {products, keyword})
+    }
+
+    async review({view, params}) {
+        const product = await Product.query()
+            .where('id' , '=', params.id)
+            .with('category')
+            .with('currency')
+            .with('variations')
+            .with('images')
+            .fetch()
+        return view.render('review', { product: product.rows[0] });
     }
 
     async create({view}) {
@@ -24,16 +62,15 @@ class ProductController {
         return view.render('product.create', { currencies: currencies.rows, categories: categories.rows });
     }
 
-    async store({request, response, session, params}) {
+    async store({request, response}) {
         let product = request.all()
         delete product._csrf;
 
-        const posted = await Product.create({
+        const created = await Product.create({
             ...product
         });
 
-        session.flash({message: 'The product has been created!', type: 'success'});
-        return response.redirect('/products');
+        response.redirect('/variations/' + created.id);
     }
 
     async edit({params, view}) {
@@ -59,14 +96,17 @@ class ProductController {
 
         await product.save();
 
-        session.flash({message: 'The product has been updated.', type: 'success'});
-        return response.redirect('/products');
+        // session.flash({message: 'The product has been updated.', type: 'success'});
+        response.redirect('/variations/' + product.id);
     }
 
     async destroy({response, session, params}) {
-        const product = await Product.find(params.id);
-
-        await product.delete();
+        const product = await Product.query().with('variations').where('id', '=', params.id).fetch();
+        for (const variation of product.rows[0].$relations.variations.rows) {
+            await variation.images().delete();
+            await variation.delete()
+        }
+        await product.rows[0].delete();
         session.flash({message: 'The product has been removed!', type: 'success'});
         return response.redirect('back');
     }

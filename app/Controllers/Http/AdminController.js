@@ -24,7 +24,7 @@ class AdminController {
     async displayLogin({ view, auth, response })  {
         // const user = await Admin.create({ username: 'Admin', email: 'admin@webstore.com', password });
         // await auth.authenticator('adminAuth').login(user);
-        console.log(auth.authenticator('adminAuth'));
+        // console.log(auth.authenticator('adminAuth'));
         return !(auth.user instanceof Admin) ?
             view.render('admin.login', {
                 key: Env.get('GOOGLE_RECAPTCHA_V3_SITE_KEY'),
@@ -92,7 +92,7 @@ class AdminController {
     }
 
     async logout({ auth, response })  {
-        await auth.authenticator('adminAuth').logout();
+        await auth.logout();
         return response.redirect('/');
     }
 

@@ -1,0 +1,137 @@
+@layout('/layouts/admin')
+
+@section('title')
+    Create Product
+@endsection
+
+@section('content')
+    <div style="margin-top: 30px;">
+        @each(variation in variations)
+        <div class="columns is-centered">
+            <div class="column is-three-fifths">
+                <div class="notification is-primary">
+                    {{ variation.name }}
+                    <button class="button is-danger is-pulled-right modal-button"  data-target="delete-variation-{{ variation.id }}" style="margin: -7px -27px 0 0;">
+                        <span class="icon is-small">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endeach
+    </div>
+    @if(flashMessage('message'))
+        <div id="message" class="columns is-centered">
+            <div class="column is-three-fifths">
+                <div class="notification is-{{ flashMessage('type') }}">
+                    <button class="delete" onclick="document.getElementById('message').style.display = 'none';"></button>
+                    {{ flashMessage('message') }}
+                </div>
+            </div>
+        </div>
+    @endif
+    <form id="form" action="/variations/save" method="POST" enctype="multipart/form-data">
+        {{ csrfField() }}
+        <input name="product_id" type="hidden" value="{{ product }}"/>
+        <div class="columns is-centered">
+            <div class="column is-three-fifths-desktop">
+                <h1 class="page-title profile-title">Product Variations</h1>
+                @if(hasErrorFor('name'))
+                <p class="form-error">
+                    {{ getErrorFor('name') }}
+                </p>
+                @endif
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" name="name" type="text" placeholder="Red Color" value="{{ old('name', '') }}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="file has-name is-fullwidth" style="margin-top: 32px;">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="images[]" multiple/>
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        Choose a file…
+                                    </span>
+                                </span>
+                                <span id="selector" class="file-name">
+
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="field">-->
+<!--                    <div class="file is-centered is-boxed is-primary has-name">-->
+<!--                        <label class="file-label">-->
+<!--                            <input class="file-input" type="file" name="images[]" multiple/>-->
+<!--                            <span class="file-cta">-->
+<!--                                <span class="file-icon">-->
+<!--                                    <i class="fas fa-upload"></i>-->
+<!--                                </span>-->
+<!--                                <span class="file-label">-->
+<!--                                    Upload images-->
+<!--                                </span>-->
+<!--                            </span>-->
+<!--                            <span id="selector" class="file-name">-->
+<!--                                Click to select an image-->
+<!--                            </span>-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;" type="submit">Add Variation</button>
+            </div>
+        </div>
+        <div class="columns is-centered">
+            <div class="column is-three-fifths">
+                <a class="button is-light is-pulled-right" href="/products" style="margin-right: 10px;" type="button">Save</a>
+            </div>
+        </div>
+    </form>
+
+    @each(variation in variations)
+        <form action="{{ route('variations.destroy', { id:variation.id }) }}?_method=DELETE" method="POST">
+            {{ csrfField() }}
+            <input type="hidden" name="_method" value="DELETE"/>
+            <div class="modal" id="delete-variation-{{ variation.id }}">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Delete Variation</p>
+                        <button class="delete" aria-label="close" type="button"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="profile-password-margin">
+                            <p style="text-align: center;">Are you sure you want to delete the variation "{{ variation.name }}"?</p>
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button" type="submit">Yes, delete it</button>
+                        <button class="button is-primary" type="button">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+        </form>
+    @endeach
+@endsection
+
+@section('scripts')
+    <script>
+        const input = document.querySelector('input[name^="images[]"]');
+        input.onchange = function(e) {
+            const selector = document.getElementById('selector')
+            if (e.target.files.length < 1) { selector.innerHTML = 'Click to select an image'; }
+            if (e.target.files.length = 1) { selector.innerHTML = '1 File Selected'; }
+            if (e.target.files.length > 1) { selector.innerHTML = e.target.files.length + ' Files Selected'; }
+        };
+    </script>
+@endsection

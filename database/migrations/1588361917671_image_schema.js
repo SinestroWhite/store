@@ -8,7 +8,6 @@ class ImageSchema extends Schema {
         this.create('images', (table) => {
             table.increments();
             table.string('name');
-            table.string('location');
             table.integer('variation_id').unsigned().references('id').inTable('variations');
             table.timestamps();
         })
