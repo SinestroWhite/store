@@ -1,0 +1,100 @@
+@layout('/layouts/admin')
+
+@section('title')
+    Edit Order
+@endsection
+
+@section('content')
+    <form id="form" action="{{ route('orders.update', { id:order.id }) }}?_method=PATCH" method="POST">
+        <input type="hidden" name="_method" value="PATCH"/>
+        <div class="columns is-centered">
+            <div class="column is-three-fifths-desktop">
+                <h1 class="page-title profile-title">Update Order</h1>
+                {{ csrfField() }}
+                @if(hasErrorFor('status'))
+                    <p class="form-error">
+                        {{ getErrorFor('status') }}
+                    </p>
+                @endif
+                @if(hasErrorFor('payment_method'))
+                    <p class="form-error">
+                        {{ getErrorFor('payment_method') }}
+                    </p>
+                @endif
+                @if(hasErrorFor('payment_status'))
+                    <p class="form-error">
+                        {{ getErrorFor('payment_status') }}
+                    </p>
+                @endif
+                @if(hasErrorFor('shipper_id'))
+                    <p class="form-error">
+                        {{ getErrorFor('shipper_id') }}
+                    </p>
+                @endif
+                @if(hasErrorFor('user_id'))
+                    <p class="form-error">
+                        {{ getErrorFor('user_id') }}
+                    </p>
+                @endif
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Status</label>
+                            <div class="control">
+                                <input class="input" name="status" type="text" placeholder="SENT" value="{{ order.status }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Payment Method</label>
+                            <div class="control">
+                                <input class="input" name="payment_method" type="text" placeholder="Credit / Debit card" value="{{ order.payment_method }}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Payment Status</label>
+                            <div class="control">
+                                <input class="input" name="payment_status" type="text" placeholder="Paid" value="{{ order.status }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">Shipper</label>
+                                <div class="select is-primary is-fullwidth">
+                                    <select name="shipper_id">
+                                        @each(shipper in shippers)
+                                            <option {{ shipper.id == order.shipper_id ? 'selected' : '' }} value="{{ shipper.id }}">{{ shipper.name }}</option>
+                                        @endeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">User</label>
+                                <div class="select is-primary is-fullwidth">
+                                    <select name="user_id">
+                                        @each(user in users)
+                                            <option {{ user.id == order.user_id ? 'selected' : '' }} value="{{ user.id }}">{{ user.username }} ({{ user.email }})</option>
+                                        @endeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;" type="submit">Save</button>
+            </div>
+    </form>
+@endsection

@@ -42,6 +42,16 @@
                     {{ getErrorFor('name') }}
                 </p>
                 @endif
+                @if(hasErrorFor('images'))
+                <p class="form-error">
+                    {{ getErrorFor('images') }}
+                </p>
+                @endif
+                @if(hasErrorFor('product_id'))
+                <p class="form-error">
+                    {{ getErrorFor('product_id') }}
+                </p>
+                @endif
                 <div class="columns">
                     <div class="column">
                         <div class="field">

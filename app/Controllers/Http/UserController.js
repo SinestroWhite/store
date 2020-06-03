@@ -7,6 +7,7 @@ const Event = use('Event');
 const Hash = use('Hash');
 
 const Address = use('App/Models/Address');
+const Order = use('App/Models/Order');
 
 Persona.registerationRules = function () {
     return {
@@ -81,6 +82,11 @@ class UserController {
 
         const payload = request.only(['username', 'email', 'password', 'password_confirmation'])
         const user = await Persona.register(payload)
+
+        const cart = Order.create({
+            submitted: false,
+            user_id: user.id
+        });
 
         await auth.login(user);
         session.flash({ message: 'We have sent you an email please, take a minute to confirm your account.', type:'success' });

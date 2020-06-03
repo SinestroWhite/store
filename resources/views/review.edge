@@ -1,7 +1,7 @@
 @layout('/layouts/default')
 
 @section('title')
-    Welcome
+    Review
 @endsection
 
 @section('content')
@@ -19,10 +19,88 @@
         @endif
     @endloggedIn
 
+    @if(flashMessage('message'))
+        <div id="message" class="columns is-centered">
+            <div class="column is-three-fifths">
+                <div class="notification is-{{ flashMessage('type') }}">
+                    <button class="delete" onclick="document.getElementById('message').style.display = 'none';"></button>
+                    {{ flashMessage('message') }}
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="columns is-centered" style="margin-top: 30px;">
-        <div class="column is-three-fifths">
-            <img src="/image/{{ product.$relations.images.rows[0].name }}" style="width: 150px; height: auto;"/>
-            {{ product.name }}
+        <div class="column is-four-fifths">
+            <div class="columns">
+                <div class="column">
+                    <div class="wrapper-gallery">
+                        <nav class="lil-nav">
+                            @each(image in variation.$relations.images.rows)
+                                <a href="#image-{{ image.id }}">
+                                    <img class="lil-nav__img" src="/image/{{ image.name }}"/>
+                                </a>
+                            @endeach
+                        </nav>
+                        <div class="gallery">
+                            @each(image in variation.$relations.images.rows)
+                                <img class="gallery__img" id="image-{{ image.id }}" src="/image/{{ image.name }}" style="height: 100%;" />
+                            @endeach
+                        </div>
+                    </div>
+<!--                    <img src="/image/{{ variation.$relations.images.rows[0].name }}" style="width: 150px; height: auto;"/>-->
+                </div>
+                <div class="column">
+                    <h1 class="title is-5" style="margin-bottom: 10px;">{{ product.name }}, {{ variation.name }}</h1>
+                    @if(product.$relations.variations.rows.length != 1)
+                        @each(variation in product.$relations.variations.rows)
+                            <a href="/review/{{ product.id }}/{{ variation.id }}">
+                                <img title="{{ variation.name }}" src="/image/{{ variation.$relations.images.rows[0].name }}" style="width: 30px; height: 30px;"/>
+                            </a>
+                        @endeach
+                    @endif
+
+                    <form action="{{ route('lists.save') }}" method="POST">
+                        {{ csrfField() }}
+                        <input type="hidden" name="variation_id" value="{{ variation.id }}"/>
+                        <div class="columns" style="margin-top: 15px;">
+                            <div class="column">
+                                <p>by {{ product.manufacturer }}</p>
+                                <p class="is-size-4">
+                                    @if(product.$relations.currency.location == 'front')
+                                        {{ product.$relations.currency.symbol }} {{ product.price }}
+                                    @else
+                                        {{ product.price }} {{ product.$relations.currency.symbol }}
+                                    @endif
+                                </p>
+                            </div>
+                            <div class="column is-three-fifths">
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="label">Quantity</label>
+                                        <div class="control">
+                                            <input class="input" name="amount" type="number" placeholder="Quantity" min="1" max="5" value="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <button class="button is-primary" type="submit" style="margin-top: 32px;">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <br/>
+                    <p>Dimensions: {{ product.dimensions }}</p>
+                </div>
+            </div>
+
+            <p style="margin: 30px 0 0 0;">{{ product.specifications }}</p>
+            <br/>
+            <p>{{ product.description }}</p>
         </div>
     </div>
 

@@ -29,7 +29,7 @@ class ProductController {
             .search(keyword)
             .with('category')
             .with('currency')
-            .with('variations')
+            .with('variations.images')
             .with('images')
             .paginate(page ? page : 1, 10);
         if (products.rows.length === 0) {
@@ -41,7 +41,7 @@ class ProductController {
         //     item.$relations.images.rows = [...new Set(product.$relations.images.rows)];
         //     return item;
         // })
-
+        // console.log(products.rows[0].$relations.variations.rows[0].$relations)
         return view.render('search', {products, keyword})
     }
 
@@ -50,10 +50,13 @@ class ProductController {
             .where('id' , '=', params.id)
             .with('category')
             .with('currency')
-            .with('variations')
+            .with('variations.images')
+            .fetch()
+        const variation = await Variation.query()
+            .where('id' , '=', params.variation_id)
             .with('images')
             .fetch()
-        return view.render('review', { product: product.rows[0] });
+        return view.render('review', { product: product.rows[0], variation: variation.rows[0] });
     }
 
     async create({view}) {

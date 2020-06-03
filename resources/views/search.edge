@@ -1,7 +1,7 @@
 @layout('/layouts/default')
 
 @section('title')
-    Welcome
+    Search
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
     <div class="columns is-centered" style="margin-top: 30px;">
         <div class="column is-four-fifths">
             <form action="/search" method="get">
-                <input class="input" style="width: calc(100% - 45px);" name="search" type="text" placeholder="Search for products"/>
+                <input id="search" class="input" style="width: calc(100% - 45px);" name="search" type="text" placeholder="Search for products"/>
                 <button class="button" type="submit">
                     <span class="icon is-small">
                         <i class="fas fa-search"></i>
@@ -35,39 +35,45 @@
     @each(product in products.rows)
         <div class="columns is-centered" style="margin-top: 20px;">
             <div class="column is-three-fifths">
-                <div style="display: flex;">
-                    <img src="/image/{{ product.$relations.images.rows[0].name }}" style="width: 150px; height: auto;"/>
-                    <div style="margin: 5px 0 0 10px;">
-                        <a class="product-name title is-5" href="/review/{{ product.id }}" style="margin-bottom: 5px;">
-                            {{ product.name }}
-                        </a>
-                        <p class="crop" style="width: 50vw;">
-                            {{ product.description }}
-                        </p>
-                        <p class="is-size-4">
-                            @if(product.$relations.currency.location == 'front')
-                                {{ product.$relations.currency.symbol }} {{ product.price }}
-                            @else
-                                {{ product.price }} {{ product.$relations.currency.symbol }}
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <img src="/image/{{ product.$relations.variations.rows[0].$relations.images.rows[0].name }}"/>
+                    </div>
+                    <div class="column">
+                        <div style="margin: 5px 0 0 10px;">
+                            <a class="product-name title is-5" href="/review/{{ product.id }}/{{ product.$relations.variations.rows[0].id }}" style="margin-bottom: 5px;">
+                                {{ product.name }}
+                            </a>
+                            <p class="crop" style="width: 50vw;">
+                                {{ product.description }}
+                            </p>
+                            <p class="is-size-4">
+                                @if(product.$relations.currency.location == 'front')
+                                    {{ product.$relations.currency.symbol }} {{ product.price }}
+                                @else
+                                    {{ product.price }} {{ product.$relations.currency.symbol }}
+                                @endif
+                            </p>
+
+                            @if(product.$relations.variations.rows.length != 1)
+                                @each(variation in product.$relations.variations.rows)
+                                    <a href="/review/{{ $parent.product.id }}/{{ variation.id }}">
+                                        <img title="{{ variation.name }}" src="/image/{{ variation.$relations.images.rows[0].name }}" style="width: 30px; height: 30px;"/>
+                                    </a>
+                                @endeach
                             @endif
-                        </p>
-                        <button class="button is-primary" type="submit">
-                            <span class="icon is-small">
-                                <i class="fas fa-cart-plus"></i>
-                            </span>
-                        </button>
-<!--                        @each(variation in product.$relations.variations.rows)-->
-<!--                            <img src="/image/{{ product.$relations.images.rows[0].name }}" style="width: 150px;"/>-->
-<!--                            <img src="/image/{{ variation.$relations.images.rows }}" style="width: 30px; height: 30px;"/>-->
-<!--                        @endeach-->
-<!--                        @each(image in product.$relations.images.rows)-->
-<!--                            <img src="/image/{{ image.name }}" style="width: 30px;"/>-->
-<!--&lt;!&ndash;                            <img src="/image/{{ variation.$relations.images.rows }}" style="width: 30px; height: 30px;"/>&ndash;&gt;-->
-<!--                        @endeach-->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     @endeach
 
+@endsection
+
+@section('scripts')
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('search').value = urlParams.get('search')
+    </script>
 @endsection

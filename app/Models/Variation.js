@@ -7,6 +7,9 @@ class Variation extends Model {
     images() {
         return this.hasMany('App/Models/Image')
     }
+    product() {
+        return this.belongsTo('App/Models/Product')
+    }
 }
 
 module.exports = Variation

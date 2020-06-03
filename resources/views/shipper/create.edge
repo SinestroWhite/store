@@ -1,0 +1,47 @@
+@layout('/layouts/admin')
+
+@section('title')
+    Create Shipper
+@endsection
+
+@section('content')
+    <form id="form" action="{{ route('shippers.store') }}" method="POST">
+        <div class="columns is-centered">
+            <div class="column is-three-fifths-desktop">
+                <h1 class="page-title profile-title">Add New Shipper</h1>
+                {{ csrfField() }}
+                @if(hasErrorFor('name'))
+                <p class="form-error">
+                    {{ getErrorFor('name') }}
+                </p>
+                @endif
+                @if(hasErrorFor('description'))
+                <p class="form-error">
+                    {{ getErrorFor('description') }}
+                </p>
+                @endif
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" name="name" type="text" placeholder="Shipper Name" value="{{ old('name', '') }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Description</label>
+                            <div class="control">
+                                <textarea class="textarea" name="description" placeholder="Describe what kind of shipping will be offered.">{{ old('description', '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;" type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+@endsection

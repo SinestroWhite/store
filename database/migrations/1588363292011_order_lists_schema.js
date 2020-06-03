@@ -8,7 +8,7 @@ class OrderListsSchema extends Schema {
         this.create('order_lists', (table) => {
             table.increments();
             table.integer('amount');
-            table.integer('variant_id').unsigned().references('id').inTable('variations');
+            table.integer('variation_id').unsigned().references('id').inTable('variations');
             table.integer('order_id').unsigned().references('id').inTable('orders');
             table.timestamps();
         })

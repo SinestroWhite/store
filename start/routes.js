@@ -20,7 +20,7 @@ const Admin = use('App/Models/Admin');
 Route.on('/').render('welcome');
 
 Route.get('/search', 'ProductController.search')
-Route.get('/review/:id', 'ProductController.review')
+Route.get('/review/:id/:variation_id', 'ProductController.review')
 
 // Route.get('/', ({ auth, view, response }) => {
 //     // if (auth.user instanceof Admin) {
@@ -80,7 +80,7 @@ Route.resource('products', 'ProductController').validator(new Map([
 ])).middleware(['auth:adminAuth'])
 
 Route.get('/variations/:id', 'VariationController.index').middleware(['auth:adminAuth']);
-Route.post('/variations/save', 'VariationController.store').middleware(['auth:adminAuth']);
+Route.post('/variations/save', 'VariationController.store').validator('ValidateVariation').middleware(['auth:adminAuth']);
 Route.delete('/variations/delete/:id', 'VariationController.destroy').middleware(['auth:adminAuth']).as('variations.destroy');
 
 Route.get('/image/:name', 'VariationController.showImage');
@@ -89,6 +89,22 @@ Route.resource('currencies', 'CurrencyController').validator(new Map([
     ['currency.store', 'ValidateCurrency'],
     ['currency.update', 'ValidateCurrency']
 ])).middleware(['auth:adminAuth'])
+
+Route.resource('shippers', 'ShipperController').validator(new Map([
+    ['shipper.store', 'ValidateShipper'],
+    ['shipper.update', 'ValidateShipper']
+])).middleware(['auth:adminAuth'])
+
+Route.resource('orders', 'OrderController').validator(new Map([
+    ['order.store', 'ValidateOrder'],
+    ['order.update', 'ValidateOrder']
+])).middleware(['auth:adminAuth'])
+
+Route.get('/cart', 'OrderListController.cart').middleware(['auth:session']).as('lists.cart');
+Route.post('/order-list/save', 'OrderListController.store').validator('ValidateOrderList').middleware(['auth:session']).as('lists.save');
+Route.delete('/order-list/:id/delete', 'OrderListController.destroy').middleware(['auth:session']).as('lists.delete');
+Route.patch('/order-list/:id/update', 'OrderListController.update').middleware(['auth:session']).as('lists.update');
+
 
 // Route.get('users/:id', 'UserController.show').middleware('auth');
 // Route.get('login', 'UserController.index');

@@ -7,6 +7,16 @@ const Product = use('App/Models/Product')
 
 class VariationController {
 
+    makeid(length) {
+        let result           = '';
+        let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for (let i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
     async index({view, params}) {
         const product = (await Product.find(params.id)).id
         const variations = await Variation.query().where('product_id', '=', params.id).fetch()
@@ -25,11 +35,12 @@ class VariationController {
 
         await images.moveAll(Helpers.tmpPath('uploads'), (file) => {
             return {
-                name: `${new Date().getTime()}.${file.subtype}`
+                name: `${new Date().getTime()}${this.makeid(7)}.${file.subtype}`
             };
         });
 
         if (!images.movedAll()) {
+            console.log(images.errors())
             session.flash({message: images.errors(), type: 'danger'});
             return response.redirect('back');
         }
@@ -37,7 +48,6 @@ class VariationController {
         const files = images.movedList()
 
         await files.forEach((file) => {
-            console.log(file)
             Image.create({
                 name: file.fileName,
                 variation_id: variation.id
