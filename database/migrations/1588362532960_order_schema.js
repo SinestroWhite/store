@@ -14,6 +14,7 @@ class OrderSchema extends Schema {
             table.boolean('submitted');
             table.integer('shipper_id').unsigned().references('id').inTable('shippers').nullable();
             table.integer('user_id').unsigned().references('id').inTable('users');
+            table.integer('address_id').unsigned().references('id').inTable('addresses');
             table.timestamps();
         })
     }

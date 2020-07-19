@@ -1,87 +1,16 @@
 @layout('/layouts/default')
 
 @section('title')
-    Cart
+    Successful Payment
 @endsection
 
 @section('content')
 
-    @loggedIn
-        @if(auth.user.account_status == 'pending' && !flashMessage('message'))
-            <div id="pendingMessage" class="columns is-centered">
-                <div class="column is-three-fifths">
-                    <div class="notification is-warning">
-                        <button class="delete" onclick="document.getElementById('pendingMessage').style.display = 'none';"></button>
-                        You haven't confirmed your email! Please, take a minute to do so. We can resend another email from <a href="/email-resend">here</a>.
-                    </div>
-                </div>
-            </div>
-        @endif
-    @endloggedIn
-
-    @if(flashMessage('message'))
-        <div id="message" class="columns is-centered">
-            <div class="column is-three-fifths">
-                <div class="notification is-{{ flashMessage('type') }}">
-                    <button class="delete" onclick="document.getElementById('message').style.display = 'none';"></button>
-                    {{ flashMessage('message') }}
-                </div>
-            </div>
-        </div>
-    @endif
-
     <div class="columns is-centered">
         <div class="column is-three-fifths">
-            <h1 class="title is-3" style="text-align: center;">Payment</h1>
-            <p style="text-align: center;">Click on the button to complete the purchase.</p>
-            <div id="paypal-button" style="margin: 20px auto 0 auto; height: 52px; width: 250px;"></div>
+            <h1 class="title is-3" style="text-align: center; margin-top: 30px;">The payment was successful!</h1>
+            <img src="/img/confirmed.svg" alt="Empty Cart" style="max-width: 500px; margin: 0 auto; display: block;"/>
         </div>
     </div>
 
-
-@endsection
-
-@section('scripts')
-
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-    <script>
-    paypal.Button.render({
-        // Configure environment
-        env: 'sandbox',
-        client: {
-            sandbox: 'AXQdcZLImNMZMicJB2YGJ8o0nc_ci8fbIbX01TDJZFmaRLo0EHIqWh5xNQONahE0Igp8eu6XwHK5KRjZ',
-            production: 'demo_production_client_id'
-        },
-        // Customize button (optional)
-        locale: 'en_US',
-        style: {
-            size: 'medium',
-            color: 'black',
-            shape: 'rect',
-        },
-
-        // Enable Pay Now checkout flow (optional)
-        commit: true,
-
-        // Set up a payment
-        payment: function(data, actions) {
-            return actions.payment.create({
-                transactions: [{
-                    amount: {
-                        total: '{{ total }}',
-                        currency: '{{ currency }}'
-                    }
-                }]
-            });
-        },
-        // Execute the payment
-            onAuthorize: function(data, actions) {
-
-                return actions.payment.execute().then(function() {
-                    // Show a confirmation message to the buyer
-                    window.alert('Thank you for your purchase!');
-                });
-            }
-        }, '#paypal-button');
-    </script>
 @endsection

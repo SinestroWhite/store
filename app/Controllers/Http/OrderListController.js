@@ -33,7 +33,7 @@ class OrderListController {
         for (let item of orderLists.rows) {
             total += item.amount * item.$relations.variation.$relations.product.price;
         }
-
+        total = total.toFixed(2);
         if (orderLists.rows.length === 0) {
             return view.render('cart')
         }
@@ -65,6 +65,54 @@ class OrderListController {
         await orderList.save();
         // session.flash({message: 'The currency has been updated.', type: 'success'});
         return response.redirect('back');
+    }
+
+    async payment({ view, request, auth }) {
+        const cart = await Order.query()
+            .where('submitted', false)
+            .where('user_id', auth.user.id)
+            .fetch()
+
+        const order = await Order.find(cart.rows[0].id);
+        order.address_id = request.all().address_id;
+        await order.save();
+
+        const orderLists = await OrderList.query()
+            .where('order_id', cart.rows[0].id)
+            .with('variation.product')
+            .with('variation.product.currency')
+            .with('variation.images')
+            .fetch();
+
+        let total = 0;
+        for (let item of orderLists.rows) {
+            total += item.amount * item.$relations.variation.$relations.product.price;
+        }
+        total = total.toFixed(2);
+        // session.flash({message: 'The currency has been updated.', type: 'success'});
+        return view.render('payment', { total, currency: orderLists.rows[0].$relations.variation.$relations.product.$relations.currency.code });
+    }
+
+    async submit({ view, auth }) {
+        const cart = await Order.query()
+            .where('submitted', false)
+            .where('user_id', auth.user.id)
+            .fetch()
+
+        const order = await Order.find(cart.rows[0].id);
+        order.submitted = true;
+        order.status = 'PROCESSING';
+        order.payment_method = 'PayPal';
+        order.payment_status = 'success';
+        order.shipper_id = 2;
+        await order.save();
+
+        Order.create({
+            submitted: false,
+            user_id: auth.user.id
+        });
+
+        return view.render('payment-successful');
     }
 
     async destroy({response, session, params}) {

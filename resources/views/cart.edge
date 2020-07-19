@@ -107,37 +107,45 @@
         </div>
     @endeach
 
+    @if(orderLists)
     <div class="columns is-centered" style="margin-top: 20px;">
         <div class="column is-three-fifths">
-            <div class="columns">
-                <div class="column is-3">
-                    <h1 class="is-size-3" style="margin-top: 25px;">
-                        Total:
-                        @if(product.$relations.currency.location == 'front')
-                            {{ product.$relations.currency.symbol }} {{ total }}
-                        @else
-                            {{ total }} {{ product.$relations.currency.symbol }}
-                        @endif
-                    </h1>
-                </div>
-                <div class="column">
-                    <div class="field">
-                        <div class="control">
-                            <label class="label">Address</label>
-                            <div class="select is-primary is-fullwidth">
-                                <select name="address_id">
-                                    @each(address in addresses.rows)
-                                        <option value="{{ address.id }}">{{ address.name }} ({{ address.address }})</option>
-                                    @endeach
-                                </select>
+            <form id="address-confirm" action="{{ route('payment') }}" method="POST">
+                {{ csrfField() }}
+                @if(flashMessage('address_id'))
+                    <p class="form-error">{{ flashMessage('address_id') }}</p>
+                @endif
+                <div class="columns">
+                    <div class="column is-3">
+                        <h1 class="is-size-3" style="margin-top: 25px;">
+                            Total:
+                            @if(product.$relations.currency.location == 'front')
+                                {{ product.$relations.currency.symbol }} {{ total }}
+                            @else
+                                {{ total }} {{ product.$relations.currency.symbol }}
+                            @endif
+                        </h1>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">Address</label>
+                                <div class="select is-primary is-fullwidth">
+                                    <select name="address_id">
+                                        @each(address in addresses.rows)
+                                            <option value="{{ address.id }}">{{ address.name }} ({{ address.address }})</option>
+                                        @endeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <button class="button is-primary is-pulled-right" style="margin-right: 10px;">
-                Proceed to payment
-            </button>
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;">
+                    Proceed to payment
+                </button>
+            </form>
         </div>
     </div>
+    @endif
 @endsection

@@ -30,123 +30,15 @@
         </div>
     @endif
 
-    @if(!orderLists)
-        <div class="columns is-centered" style="margin-top: 20px;">
-            <div class="column is-three-fifths">
-                <h1 class="title is-4" style="text-align: center;">Your cart is empty. Add some items to your cart and they will appear here.</h1>
-                <img src="/img/empty_cart.svg" alt="Empty Cart" style="max-width: 500px; margin: 0 auto; display: block;"/>
-            </div>
-        </div>
-    @endif
-
-    @each(item in orderLists)
-        <div class="columns is-centered" style="margin-top: 20px;">
-            <div class="column is-three-fifths">
-                <div class="columns">
-                    <div class="column is-one-fifth">
-                        <img src="/image/{{ item.$relations.variation.$relations.images.rows[0].name }}"/>
-                    </div>
-                    @set('product', item.$relations.variation.$relations.product)
-                    <div class="column">
-                        <div style="margin: 5px 0 0 10px;">
-                            <a class="product-name title is-5 crop" href="/review/{{ product.id }}/{{ item.$relations.variation.id }}" style="margin-bottom: 5px; width: 40vw;">
-                                {{ product.name }}
-                            </a>
-                            <p class="is-size-4">
-                                @if(product.$relations.currency.location == 'front')
-                                    {{ product.$relations.currency.symbol }} {{ product.price }}
-                                @else
-                                    {{ product.price }} {{ product.$relations.currency.symbol }}
-                                @endif
-
-                                @if(item.amount != 1)
-                                    @if(product.$relations.currency.location == 'front')
-                                        {{ product.$relations.currency.symbol }} x {{ item.amount }} = {{ product.price * item.amount }}
-                                    @else
-                                        x {{ item.amount }} = {{ product.price * item.amount }} {{ product.$relations.currency.symbol }}
-                                    @endif
-                                @endif
-                            </p>
-
-                            <div class="columns" style="margin-top: 15px;">
-                                <div class="column">
-                                    <form action="{{ route('lists.update', { id: item.id }) }}?_method=PATCH" method="POST">
-                                        {{ csrfField() }}
-                                        <div style="display: flex;">
-                                            <div class="field" style="width: 100px;">
-                                                <div class="control">
-                                                    <label class="label">Quantity</label>
-                                                    <div class="control">
-                                                        <input class="input" name="amount" type="number" placeholder="Quantity" min="1" max="5" value="{{ item.amount }}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="button is-primary" type="submit" style="margin-top: 32px; margin-left: 10px;">
-                                                <span class="icon is-small">
-                                                    <i class="fas fa-check"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="column">
-                                    <form action="{{ route('lists.delete', { id: item.id }) }}?_method=DELETE" method="POST">
-                                        {{ csrfField() }}
-                                        <button class="button is-danger is-pulled-right" type="submit" style="margin-top: 32px;">
-                                            <span class="icon is-small">
-                                                <i class="fas fa-trash"></i>
-                                            </span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endeach
-
-    <div class="columns is-centered" style="margin-top: 20px;">
+    <div class="columns is-centered">
         <div class="column is-three-fifths">
-            <form id="address-confirm" action="/payment" method="GET">
-                {{ csrfField() }}
-                @if(flashMessage('address_id'))
-                    <p class="form-error">{{ flashMessage('address_id') }}</p>
-                @endif
-                <div class="columns">
-                    <div class="column is-3">
-                        <h1 class="is-size-3" style="margin-top: 25px;">
-                            Total:
-                            @if(product.$relations.currency.location == 'front')
-                                {{ product.$relations.currency.symbol }} {{ total }}
-                            @else
-                                {{ total }} {{ product.$relations.currency.symbol }}
-                            @endif
-                        </h1>
-                    </div>
-                    <div class="column">
-                        <div class="field">
-                            <div class="control">
-                                <label class="label">Address</label>
-                                <div class="select is-primary is-fullwidth">
-                                    <select name="address_id">
-                                        @each(address in addresses.rows)
-                                            <option value="{{ address.id }}">{{ address.name }} ({{ address.address }})</option>
-                                        @endeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="button is-primary is-pulled-right" style="margin-right: 10px;">
-                    Proceed to payment
-                </button>
-                <div id="paypal-button" class="is-pulled-right"></div>
-            </form>
+            <h1 class="title is-3" style="text-align: center;">Payment</h1>
+            <p style="text-align: center;">Click on the button to complete the purchase.</p>
+            <div id="paypal-button" style="margin: 20px auto 0 auto; height: 52px; width: 250px;"></div>
         </div>
     </div>
+
+
 @endsection
 
 @section('scripts')
@@ -157,7 +49,7 @@
         // Configure environment
         env: 'sandbox',
         client: {
-            sandbox: 'demo_sandbox_client_id',
+            sandbox: 'AXQdcZLImNMZMicJB2YGJ8o0nc_ci8fbIbX01TDJZFmaRLo0EHIqWh5xNQONahE0Igp8eu6XwHK5KRjZ',
             production: 'demo_production_client_id'
         },
         // Customize button (optional)
@@ -173,24 +65,21 @@
 
         // Set up a payment
         payment: function(data, actions) {
-
-            document.getElementById('address.confirm').submit()
-
             return actions.payment.create({
                 transactions: [{
                     amount: {
                         total: '{{ total }}',
-                        currency: '{{ product.$relations.currency.code }}'
+                        currency: '{{ currency }}'
                     }
                 }]
             });
         },
         // Execute the payment
             onAuthorize: function(data, actions) {
-
                 return actions.payment.execute().then(function() {
                     // Show a confirmation message to the buyer
-                    window.alert('Thank you for your purchase!');
+<!--                    window.alert('Thank you for your purchase!');-->
+                    window.location.replace("/success");
                 });
             }
         }, '#paypal-button');

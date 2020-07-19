@@ -36,12 +36,6 @@ class ProductController {
             return view.render('search', {keyword})
         }
 
-        // products.rows = products.rows.map((product) => {
-        //     let item = product;
-        //     item.$relations.images.rows = [...new Set(product.$relations.images.rows)];
-        //     return item;
-        // })
-        // console.log(products.rows[0].$relations.variations.rows[0].$relations)
         return view.render('search', {products, keyword})
     }
 
@@ -72,6 +66,16 @@ class ProductController {
         const created = await Product.create({
             ...product
         });
+
+        try {
+            const product = await stripe.products.create({
+                name: created.name,
+                description: created.description,
+                active: created.is_active,
+            });
+        } catch (error) {
+            console.log(error)
+        }
 
         response.redirect('/variations/' + created.id);
     }
