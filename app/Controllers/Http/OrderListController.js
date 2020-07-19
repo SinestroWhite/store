@@ -2,6 +2,7 @@
 
 const OrderList = use('App/Models/OrderList');
 const Order = use('App/Models/Order');
+const Product = use('App/Models/Product');
 
 class OrderListController {
     async index({view, params}) {
@@ -97,6 +98,8 @@ class OrderListController {
         const cart = await Order.query()
             .where('submitted', false)
             .where('user_id', auth.user.id)
+            .with('lists')
+            .with('lists.variation')
             .fetch()
 
         const order = await Order.find(cart.rows[0].id);
@@ -104,13 +107,19 @@ class OrderListController {
         order.status = 'PROCESSING';
         order.payment_method = 'PayPal';
         order.payment_status = 'success';
-        order.shipper_id = 2;
+        order.shipper_id = 1;
         await order.save();
 
         Order.create({
             submitted: false,
             user_id: auth.user.id
         });
+
+        for (let item of cart.rows[0].$relations.lists.rows) {
+            const product = await Product.find(item.$relations.variation.product_id);
+            product.quantity -= item.amount;
+            await product.save();
+        }
 
         return view.render('payment-successful');
     }

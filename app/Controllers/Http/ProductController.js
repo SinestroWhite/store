@@ -67,15 +67,15 @@ class ProductController {
             ...product
         });
 
-        try {
-            const product = await stripe.products.create({
-                name: created.name,
-                description: created.description,
-                active: created.is_active,
-            });
-        } catch (error) {
-            console.log(error)
-        }
+        // try {
+        //     const product = await stripe.products.create({
+        //         name: created.name,
+        //         description: created.description,
+        //         active: created.is_active,
+        //     });
+        // } catch (error) {
+        //     console.log(error)
+        // }
 
         response.redirect('/variations/' + created.id);
     }
