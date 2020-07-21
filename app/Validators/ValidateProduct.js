@@ -5,8 +5,9 @@ class ValidateProduct {
         return {
             'name': 'required|max:255',
             'description': 'required',
-            'manufacturer': 'max:255',
-            'dimensions': 'max:255',
+            'specifications': 'required',
+            'manufacturer': 'required|max:255',
+            'dimensions': 'required|max:255',
             'price': 'required|number|min: 0',
             'quantity': 'required|number|min: 0',
             'is_active': 'required|boolean',
@@ -17,7 +18,7 @@ class ValidateProduct {
 
     get messages() {
         return {
-            'required': 'The {{ field }} is required.',
+            'required': 'The {{ field }} field is required.',
             'max': 'The {{ field }} is too long.',
             'min': 'The {{ field }} is negative.',
             'boolean': 'The {{ field }} is not a boolean.',

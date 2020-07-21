@@ -17,10 +17,10 @@
 const Route = use('Route');
 const Admin = use('App/Models/Admin');
 
-Route.on('/').render('welcome');
+Route.get('/', 'WelcomeController.index');
 
-Route.get('/search', 'ProductController.search')
-Route.get('/review/:id/:variation_id', 'ProductController.review')
+Route.get('/search', 'ProductController.search');
+Route.get('/review/:id/:variation_id', 'ProductController.review');
 
 // Route.get('/', ({ auth, view, response }) => {
 //     // if (auth.user instanceof Admin) {

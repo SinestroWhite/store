@@ -14,10 +14,11 @@
                         <tr>
                             <th>User</th>
                             <th>Status</th>
-<!--                            <th>Receipt</th>-->
                             <th>Payment Method</th>
                             <th>Payment Status</th>
                             <th>Shipper</th>
+                            <th>Price</th>
+                            <th>Submitted On</th>
                             <th>Management</th>
                         </tr>
                     </thead>
@@ -26,10 +27,11 @@
                             <tr>
                                 <td>{{ order.$relations.user.username }}</td>
                                 <td>{{ order.status }}</td>
-<!--                                <td>{{ order.receipt }}</td>-->
                                 <td>{{ order.payment_method }}</td>
                                 <td>{{ order.payment_status }}</td>
                                 <td>{{ order.$relations.shipper.name }}</td>
+                                <td>€{{ order.price }}</td>
+                                <td>{{ order.created_at }}</td>
                                 <td>
                                     <a class="button is-primary" href="{{ route('orders.edit', { id: order.id }) }}" data-tooltip="Edit">
                                         <span class="icon is-small">

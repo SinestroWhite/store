@@ -24,7 +24,8 @@ class VariationController {
     }
 
     async store({request, view, session, response}) {
-        const payload = request.only(['name', 'product_id'])
+        let payload = request.only(['name', 'product_id']);
+        payload.id = await Variation.getMax('id') + 1;
         const variation = await Variation.create(payload);
 
         const images = request.file('images', {
@@ -47,8 +48,10 @@ class VariationController {
 
         const files = images.movedList()
 
+        const id = await Image.getMax('id') + 1;
         await files.forEach((file) => {
             Image.create({
+                id: id,
                 name: file.fileName,
                 variation_id: variation.id
             })

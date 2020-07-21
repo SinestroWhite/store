@@ -10,14 +10,21 @@ class ProductController {
         const keyword = request.get().search;
         let page  = request.get().page;
         page = page ? page : 1;
-        const products = await Product.query()
+        let products = await Product.query()
             .search(keyword)
             .with('category')
             .with('currency')
+            .orderBy('created_at', 'asc')
             .paginate(page ? page : 1, 10);
+
         if (products.rows.length === 0) {
             return view.render('product.index', {keyword})
         }
+
+        for (let i = 0; i < products.rows.length; i++) {
+            products.rows[i].price = products.rows[i].price.toFixed(2);
+        }
+
         return view.render('product.index', {products, keyword})
     }
 
@@ -26,6 +33,7 @@ class ProductController {
         let page  = request.get().page;
         page = page ? page : 1;
         const products = await Product.query()
+            .where('is_active', '=', true)
             .search(keyword)
             .with('category')
             .with('currency')

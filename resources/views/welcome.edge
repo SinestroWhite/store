@@ -74,4 +74,34 @@
             </div>
         </div>
     </div>
+
+
+    <div class="columns is-centered" style="margin-top: 70px;">
+        <div class="column is-three-fifths">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title" style="margin-bottom: -100px;">New</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 70px;">
+        <div class="column is-three-fifths">
+            <div class="columns">
+                @each(product in products.rows)
+                    <div class="column is-one-fifth">
+                        <a class="product-name title is-5" href="/review/{{ product.id }}/{{ product.$relations.variations.rows[0].id }}" style="margin-bottom: 5px;">
+                            <img src="/image/{{ product.$relations.variations.rows[0].$relations.images.rows[0].name }}"/>
+
+                            <div style="margin: 5px 0 0 10px;">
+                                {{ product.name }}
+                            </div>
+                        </a>
+                    </div>
+                @endeach
+            </div>
+        </div>
+    </div>
+
 @endsection

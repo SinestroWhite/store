@@ -9,16 +9,26 @@ class OrderController {
         const keyword = request.get().search;
         let page  = request.get().page;
         page = page ? page : 1;
-        const orders = await Order.query()
+        let orders = await Order.query()
             .where('submitted', true)
             .search(keyword)
             .with('user')
             .with('shipper')
+            .with('lists.variation.product')
             .paginate(page ? page : 1, 10);
         if (orders.rows.length === 0) {
             return view.render('order.index', {keyword})
         }
-        console.log(orders.rows[0].$relations.user);
+
+        for (let i = 0; i < orders.rows.length; i++) {
+            let total = 0;
+            for (let j = 0; j < orders.rows[i].$relations.lists.rows.length; j++) {
+                total += orders.rows[i].$relations.lists.rows[j].$relations.variation.$relations.product.price;
+            }
+            orders.rows[i].price = total.toFixed(2);
+        }
+
+        // console.log(orders.rows[0].$relations.user);
         return view.render('order.index', {orders, keyword})
     }
 
