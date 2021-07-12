@@ -32,42 +32,61 @@
         </div>
     </div>
 
-    @each(product in products.rows)
-        <div class="columns is-centered" style="margin-top: 20px;">
-            <div class="column is-three-fifths">
-                <div class="columns">
-                    <div class="column is-one-fifth">
-                        <img src="/image/{{ product.$relations.variations.rows[0].$relations.images.rows[0].name }}"/>
-                    </div>
-                    <div class="column">
-                        <div style="margin: 5px 0 0 10px;">
-                            <a class="product-name title is-5" href="/review/{{ product.id }}/{{ product.$relations.variations.rows[0].id }}" style="margin-bottom: 5px;">
-                                {{ product.name }}
-                            </a>
-                            <p class="crop" style="width: 50vw;">
-                                {{ product.description }}
-                            </p>
-                            <p class="is-size-4">
-                                @if(product.$relations.currency.location == 'front')
-                                    {{ product.$relations.currency.symbol }} {{ product.price }}
-                                @else
-                                    {{ product.price }} {{ product.$relations.currency.symbol }}
-                                @endif
-                            </p>
+    <div style="margin: 30px 0;">
+        <p style="text-align: center;">
+            @each(category in categories.rows)
+                <a id="category-{{ category.name }}" style="padding: 15px; font-size: 20px;" href="/search?category={{ category.name }}">{{ category.name }}</a>
+            @endeach
+        </p>
+    </div>
 
-                            @if(product.$relations.variations.rows.length != 1)
-                                @each(variation in product.$relations.variations.rows)
-                                    <a href="/review/{{ $parent.product.id }}/{{ variation.id }}">
-                                        <img title="{{ variation.name }}" src="/image/{{ variation.$relations.images.rows[0].name }}" style="width: 30px; height: 30px;"/>
-                                    </a>
-                                @endeach
-                            @endif
+    @if(products)
+        @each(product in products.rows)
+            <div class="columns is-centered" style="margin-top: 20px;">
+                <div class="column is-three-fifths">
+                    <div class="columns">
+                        <div class="column is-one-fifth">
+                            <img src="/image/{{ product.$relations.variations.rows[0].$relations.images.rows[0].name }}"/>
+                        </div>
+                        <div class="column">
+                            <div style="margin: 5px 0 0 10px;">
+                                <a class="product-name title is-5" href="/review/{{ product.id }}/{{ product.$relations.variations.rows[0].id }}" style="margin-bottom: 5px;">
+                                    {{ product.name }}
+                                </a>
+                                <p class="crop" style="width: 50vw;">
+                                    {{ product.description }}
+                                </p>
+                                <p class="is-size-4">
+                                    @if(product.$relations.currency.location == 'front')
+                                        {{ product.$relations.currency.symbol }} {{ product.price }}
+                                    @else
+                                        {{ product.price }} {{ product.$relations.currency.symbol }}
+                                    @endif
+                                </p>
+
+                                @if(product.$relations.variations.rows.length != 1)
+                                    @each(variation in product.$relations.variations.rows)
+                                        <a href="/review/{{ $parent.product.id }}/{{ variation.id }}">
+                                            <img title="{{ variation.name }}" src="/image/{{ variation.$relations.images.rows[0].name }}" style="width: 30px; height: 30px;"/>
+                                        </a>
+                                    @endeach
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endeach
+        @endeach
+
+         <div class="columns is-centered" style="margin-bottom: 30px;">
+                <div class="column is-three-fifths-desktop">
+                    @component('components/pagination', { pages: products.pages })
+                    @endcomponent
+                </div>
+         </div>
+    @else
+        <p style="text-align: center;">No results have been found.</p>
+    @endif
 
 @endsection
 
@@ -75,5 +94,10 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         document.getElementById('search').value = urlParams.get('search')
+
+        if (urlParams.has('category')) {
+            const currentCategory = urlParams.get('category');
+            document.getElementById('category-' + currentCategory).setAttribute('style', 'text-decoration: underline; color: #8295ff; padding: 15px; font-size: 20px;');
+        }
     </script>
 @endsection

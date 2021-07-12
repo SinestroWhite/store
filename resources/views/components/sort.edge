@@ -1,0 +1,34 @@
+@if(state == "")
+    <a href="javascript:sortAsc{{param}}()">
+        <span class="icon is-small" style="position: relative; top: 3px;">
+            <i class="fas fa-sort"></i>
+        </span>
+    </a>
+@elseif(state == "asc")
+    <a href="javascript:sortDesc{{param}}()">
+        <span class="icon is-small" style="position: relative; top: 3px;">
+            <i class="fas fa-sort-up"></i>
+        </span>
+    </a>
+@else
+    <a href="javascript:sortNone{{param}}()">
+        <span class="icon is-small" style="position: relative; top: 3px;">
+            <i class="fas fa-sort-down"></i>
+        </span>
+    </a>
+@endif
+
+<script>
+    function sortAsc{{param}}() {
+        const temp = updateURLParameter(document.URL, 'param', '{{param}}');
+        return updateURLParameter(temp, 'sort', 'asc');
+    }
+    function sortDesc{{param}}() {
+        const temp = updateURLParameter(document.URL, 'param', '{{param}}');
+        return updateURLParameter(temp, 'sort', 'desc');
+    }
+    function sortNone{{param}}() {
+        const temp = updateURLParameter(document.URL, 'param', '');
+        return updateURLParameter(temp, 'sort', '');
+    }
+</script>

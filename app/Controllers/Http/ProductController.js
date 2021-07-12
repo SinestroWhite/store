@@ -8,13 +8,15 @@ const Variation = use('App/Models/Variation')
 class ProductController {
     async index({request, view}) {
         const keyword = request.get().search;
-        let page  = request.get().page;
-        page = page ? page : 1;
+        let page  = request.get().page ? request.get().page : 1;
+        let param = request.get().param ? request.get().param : 'created_at';
+        let sort = request.get().sort ? request.get().sort : '';
+
         let products = await Product.query()
             .search(keyword)
             .with('category')
             .with('currency')
-            .orderBy('created_at', 'asc')
+            .orderBy(param, sort)
             .paginate(page ? page : 1, 10);
 
         if (products.rows.length === 0) {
@@ -25,26 +27,49 @@ class ProductController {
             products.rows[i].price = products.rows[i].price.toFixed(2);
         }
 
-        return view.render('product.index', {products, keyword})
+        return view.render('product.index', {products, keyword, state: sort, category: param})
     }
 
     async search({request, view}) {
         const keyword = request.get().search;
         let page  = request.get().page;
         page = page ? page : 1;
-        const products = await Product.query()
-            .where('is_active', '=', true)
-            .search(keyword)
-            .with('category')
-            .with('currency')
-            .with('variations.images')
-            .with('images')
-            .paginate(page ? page : 1, 10);
-        if (products.rows.length === 0) {
-            return view.render('search', {keyword})
+
+        let products;
+        if (request.get().category) {
+            const category = await Category.query()
+                .where('name', '=', request.get().category)
+                .fetch();
+
+            products = await Product.query()
+                .where('is_active', '=', true)
+                .where('category_id', '=', category.rows[0].id)
+                .search(keyword)
+                .with('category')
+                .with('currency')
+                .with('variations.images')
+                .with('images')
+                .paginate(page ? page : 1, 10);
+
+        } else {
+            products = await Product.query()
+                .where('is_active', '=', true)
+                .search(keyword)
+                .with('category')
+                .with('currency')
+                .with('variations.images')
+                .with('images')
+                .paginate(page ? page : 1, 10);
         }
 
-        return view.render('search', {products, keyword})
+
+        const categories = await Category.all();
+
+        if (products.rows.length === 0) {
+            return view.render('search', {keyword, categories})
+        }
+
+        return view.render('search', {products, keyword, categories})
     }
 
     async review({view, params}) {
@@ -53,7 +78,9 @@ class ProductController {
             .with('category')
             .with('currency')
             .with('variations.images')
+            .with('reviews')
             .fetch()
+
         const variation = await Variation.query()
             .where('id' , '=', params.variation_id)
             .with('images')

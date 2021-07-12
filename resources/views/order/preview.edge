@@ -1,4 +1,4 @@
-@layout('/layouts/admin')
+@layout('/layouts/default')
 
 @section('title')
     Orders
@@ -7,49 +7,35 @@
 @section('content')
     <div class="columns is-centered">
         <div class="column is-three-fifths-desktop">
-            <h1 class="page-title profile-title">Orders</h1>
+            <h1 class="page-title profile-title">My Orders</h1>
             @if(orders)
                 <table class="table is-hoverable is-fullwidth">
                     <thead>
                         <tr>
-                            <th>User</th>
                             <th>Status</th>
                             <th>Payment Method</th>
                             <th>Payment Status</th>
                             <th>Shipper</th>
                             <th>Price</th>
                             <th>Submitted On</th>
-                            <th>Management</th>
+                            <th>Preview</th>
                         </tr>
                     </thead>
                     <tbody>
                         @each(order in orders.rows)
                             <tr>
-                                <td>{{ order.$relations.user.username }}</td>
                                 <td>{{ order.status }}</td>
                                 <td>{{ order.payment_method }}</td>
                                 <td>{{ order.payment_status }}</td>
                                 <td>{{ order.$relations.shipper.name }}</td>
                                 <td>€{{ order.price }}</td>
-                                <td style="max-width: 200px;">{{ order.created_at }}</td>
+                                <td>{{ order.created_at }}</td>
                                 <td>
                                     <a class="button is-primary modal-button" data-target="products-order-{{ order.id }}" data-tooltip="Ordered Products">
                                         <span class="icon is-small">
                                             <i class="fas fa-list-alt"></i>
                                         </span>
                                     </a>
-
-                                    <a class="button is-primary" href="{{ route('orders.edit', { id: order.id }) }}" data-tooltip="Edit">
-                                        <span class="icon is-small">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </span>
-                                    </a>
-
-                                    <button class="button is-danger modal-button" data-target="delete-order-{{ order.id }}" data-tooltip="Delete">
-                                        <span class="icon is-small">
-                                            <i class="fas fa-trash"></i>
-                                        </span>
-                                    </button>
                                 </td>
                             </tr>
                         @endeach
@@ -79,7 +65,6 @@
                                             </div>
                                         </a>
                                     </div>
-
                                 @endeach
                             </div>
                         </section>
@@ -87,29 +72,6 @@
                         </footer>
                     </div>
                 </div>
-
-                <form action="{{ route('orders.destroy', { id:order.id }) }}?_method=DELETE" method="POST">
-                    {{ csrfField() }}
-                    <input type="hidden" name="_method" value="DELETE"/>
-                    <div class="modal" id="delete-order-{{ order.id }}">
-                        <div class="modal-background"></div>
-                        <div class="modal-card">
-                            <header class="modal-card-head">
-                                <p class="modal-card-title">Delete Order</p>
-                                <button class="delete" aria-label="close" type="button"></button>
-                            </header>
-                            <section class="modal-card-body">
-                                <div class="profile-password-margin">
-                                    <p style="text-align: center;">Are you sure you want to delete the order?</p>
-                                </div>
-                            </section>
-                            <footer class="modal-card-foot">
-                                <button class="button" type="submit">Yes, delete it</button>
-                                <button class="button is-primary" type="button">Cancel</button>
-                            </footer>
-                        </div>
-                    </div>
-                </form>
             @endeach
         </div>
     </div>

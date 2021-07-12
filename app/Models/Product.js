@@ -13,6 +13,9 @@ class Product extends Model {
     variations() {
         return this.hasMany('App/Models/Variation')
     }
+    reviews() {
+        return this.hasMany('App/Models/Review')
+    }
     images() {
         return this.manyThrough('App/Models/Variation', 'images', 'id', 'product_id')
     }

@@ -1,0 +1,48 @@
+@layout('/layouts/admin')
+
+@section('title')
+    Edit Review
+@endsection
+
+@section('content')
+    <form id="form" action="{{ route('reviews.update', { id:review.id }) }}?_method=PATCH" method="POST">
+        <input type="hidden" name="_method" value="PATCH"/>
+        <div class="columns is-centered">
+            <div class="column is-three-fifths-desktop">
+                <h1 class="page-title profile-title">Update Review</h1>
+                {{ csrfField() }}
+                @if(hasErrorFor('comment'))
+                <p class="form-error">
+                    {{ getErrorFor('comment') }}
+                </p>
+                @endif
+                @if(hasErrorFor('rating'))
+                <p class="form-error">
+                    {{ getErrorFor('rating') }}
+                </p>
+                @endif
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Comment</label>
+                            <div class="control">
+                                <input class="input" name="comment" type="text" value="{{ review.comment }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Rating</label>
+                            <div class="control">
+                                <input class="input" name="rating" type="number" value="{{ review.rating }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="button is-primary is-pulled-right" style="margin-right: 10px;" type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+@endsection

@@ -7,10 +7,12 @@
         <link rel="icon" type="image/png" sizes="32x32" href="/img/favicons/favicon-32x32.png"/>
         <link rel="icon" type="image/png" sizes="16x16" href="/img/favicons/favicon-16x16.png"/>
         <link rel="manifest" href="/site.webmanifest"/>
+
         <title>
             WebStore |
             @!section('title')
         </title>
+        {{ style('heartbeat') }}
         {{ style('app') }}
         @!section('css')
     </head>
@@ -37,6 +39,9 @@
                         </a>
                         <a class="navbar-item" href="/products">
                             Products
+                        </a>
+                        <a class="navbar-item" href="/reviews">
+                            Reviews
                         </a>
                         <a class="navbar-item" href="/categories">
                             Categories

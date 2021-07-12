@@ -11,6 +11,7 @@
             WebStore |
             @!section('title')
         </title>
+        {{ style('heartbeat') }}
         {{ style('app') }}
         @!section('css')
     </head>
@@ -36,6 +37,9 @@
                                 @loggedIn
                                     <a class="navbar-item" href="/cart">
                                         Cart
+                                    </a>
+                                    <a class="navbar-item" href="/my-orders">
+                                        My Orders
                                     </a>
                                     <div class="navbar-item has-dropdown is-hoverable">
                                         <a class="navbar-link">

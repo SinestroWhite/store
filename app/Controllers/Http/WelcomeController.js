@@ -1,6 +1,7 @@
 'use strict'
 
 const Product = use('App/Models/Product')
+const Category = use('App/Models/Category')
 
 class WelcomeController {
     async index({request, view}) {
@@ -11,11 +12,13 @@ class WelcomeController {
             .limit(5)
             .fetch();
 
+        let categories = await Category.all();
+
         for (let i = 0; i < products.rows.length; i++) {
             products.rows[i].price = products.rows[i].price.toFixed(2);
         }
 
-        return view.render('welcome', {products})
+        return view.render('welcome', {products, categories})
     }
 }
 

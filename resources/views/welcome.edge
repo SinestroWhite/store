@@ -30,6 +30,14 @@
         @endif
     @endloggedIn
 
+    <div style="margin: 30px 0;">
+        <p style="text-align: center;">
+            @each(category in categories.rows)
+                <a style="padding: 15px; font-size: 20px;" href="/search?category={{ category.name }}">{{ category.name }}</a>
+            @endeach
+        </p>
+    </div>
+
     <div style="background-image: url('img/blob_1.svg'); background-repeat: no-repeat, repeat; height: 250px; width: 250px; position: absolute; top: 50px; right: 0px;">
     </div>
 

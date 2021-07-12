@@ -100,8 +100,14 @@ Route.resource('orders', 'OrderController').validator(new Map([
     ['order.update', 'ValidateOrder']
 ])).middleware(['auth:adminAuth'])
 
+Route.resource('reviews', 'ReviewController').validator(new Map([
+    ['review.store', 'ValidateReview'],
+    ['review.update', 'ValidateReview']
+])).middleware(['auth:adminAuth'])
+
 Route.get('/cart', 'OrderListController.cart').middleware(['auth:session']).as('lists.cart');
 Route.get('/success', 'OrderListController.submit').middleware(['auth:session']).as('submit');
+Route.get('/my-orders', 'OrderController.myOrders').middleware(['auth:session']).as('my-orders');
 Route.post('/payment', 'OrderListController.payment').validator('ValidateAddressId').middleware(['auth:session']).as('payment');
 Route.post('/order-list/save', 'OrderListController.store').validator('ValidateOrderList').middleware(['auth:session']).as('lists.save');
 Route.delete('/order-list/:id/delete', 'OrderListController.destroy').middleware(['auth:session']).as('lists.delete');
